@@ -13,58 +13,93 @@ class UsersRepository {
         return data;
       } catch(err){
         console.log(err.stack);
+        throw err;
       }
   }
 
-  async findById(id) {
+  async findOne(Username) {
     try{
-        const data = await db.query("SELECT * FROM users WHERE Id = $1", [id]);
+        const data = await db.query("SELECT * FROM users WHERE Username = $1", [Username]);
         console.log(data.rows);
         return data;
       } catch(err){
         console.log(err.stack);
+        throw err;
       }
   }
 
-  async findByUsername(userName) {
+  async create(username, email, hashedPassword) {
     try{
-        const data = await db.query("SELECT * FROM users WHERE Username = $1", [userName]);
-        console.log(data.rows);
-        return data;
+        return await db.query(
+          'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
+          [username, email, hashedPassword]
+          );
       } catch(err){
         console.log(err.stack);
+        throw err;
       }
   }
 
-  async findByEmail(email) {
+  async updateUser(username, password){
     try{
-        const data = await db.query("SELECT * FROM users WHERE email = $1", [email]);
-        console.log(data.rows);
-        return data;
+      return await db.query(
+        'UPDATE users SET password = $2, updatedAt = NOW() WHERE username = $1',
+        [username, password]
+      );
+    } catch(err){
+      console.log(err.stack);
+      throw err;
+    }
+  }
+
+  async removeUser(Username) {
+    try{
+        return await db.query("DELETE FROM users WHERE Username = $1", [Username]);
       } catch(err){
         console.log(err.stack);
+        throw err;
       }
   }
 
-  async create(user) {
+  async existUsername(username){
     try{
-        const data = await db.query("INSERT INTO users (Username, Email, Password, CreatedAt, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", user);
-        console.log(data.rows);
-        return data;
-      } catch(err){
-        console.log(err.stack);
-      }
+      return await db.query('SELECT * FROM users WHERE username = $1', [username]);
+    } catch(err){
+      console.log(err.stack);
+      throw err;
+    }
+    
   }
 
-  async deleteUserById(id) {
+  async existEmail(email){
     try{
-        const data = await db.query("DELETE FROM users WHERE Id = $1", [id]);
-        console.log(data);
-        return data;
-      } catch(err){
-        console.log(err.stack);
-      }
+      return await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    } catch(err){
+      console.log(err.stack);
+      throw err;
+    }
+    
   }
+
+  // async findByUsername(userName) {
+  //   try{
+  //       const data = await db.query("SELECT * FROM users WHERE Username = $1", [userName]);
+  //       console.log(data.rows);
+  //       return data;
+  //     } catch(err){
+  //       console.log(err.stack);
+  //     }
+  // }
+
+  // async findByEmail(email) {
+  //   try{
+  //       const data = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+  //       console.log(data.rows);
+  //       return data;
+  //     } catch(err){
+  //       console.log(err.stack);
+  //     }
+  // }
 
 }
 

@@ -1,39 +1,48 @@
 "use strict";
 
-const { UsersRepository } = require('../ repositories');
+const UsersService = require('../services/users.service');
 
 class UsersController {
   constructor() {}
 
   async getAllUsers(req, res) {
-    const data = await UsersRepository.findAll();
+    const data = await UsersService.findAllUsers();
     return res.status(200).send(data.rows);
   }
 
   async getUserById(req, res) {
     const id = req.params.id;
-    const data = await UsersRepository.findById(id);
+    const data = await UsersService.findUser(id);
+    if (data.rows.length < 1){
+      return res.status(404).send("User not found!");
+    }
     return res.status(200).send(data.rows);
   }
 
   async createUser(req, res) {
-    const {Username, Email, Password, CreatedAt, UpdatedAt} = await req.body;
-    const data = await UsersRepository.create([Username, Email, Password, CreatedAt, UpdatedAt])
-    if (data) return res.status(201).send("User created successfully!");
+    const {Username, Email, Password} = await req.body;
+    if (!Username || !Email || !Password) {
+      return res.status(400).send({ message: 'Invalid request body' });
+    }
+    const data = await UsersService.createUser(Username, Email, Password);
+    if (data) return res.status(data.status).send(data.message);
   }
 
   async deleteUserById(req, res) {
     const id = req.params.id;
-    const data = await UsersRepository.deleteUserById(id);
-    if(data.rowCount === 0) res.send("User Does not exist is DB!")
-    if (data) return res.status(200).send("User deleted successfully!");
+    const data = await UsersService.removeUser(id);
+    return res.status(data.status).send(data.message);
   }
 
   async updateUserById(req, res) {
     const id = req.params.id;
-    let {Username, Email, Password} = req.body;
-    const data = await UsersRepository.findById(id);
-    return res.status(200).send({ message: `Updated user with id ${id}` });
+    const { Password }  = req.body;
+    if (!Password) {
+      res.status(400).send({ message: 'Invalid request body' });
+      return;
+    }
+    const data = await UsersService.updateUser(id, Password);
+    return res.status(data.status).send({ message:  data.message});
   }
 }
 
