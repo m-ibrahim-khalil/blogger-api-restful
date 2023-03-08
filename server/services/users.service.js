@@ -2,16 +2,22 @@
 
 const bcrypt = require ('bcrypt');
 const { UsersRepository } = require('../ repositories');
+const {ViewOnlyUser, CreateOnlyUser} = require('../dto/users')
 
 class UsersService {
   constructor() {}
 
   async findAllUsers() {
-    return await UsersRepository.findAll();
+    const { rows: users } = await UsersRepository.findAll();
+    return  {status: 200, message:users.map(user => new ViewOnlyUser(user))};
   }
 
-  async findUser(Username) {
-    return await UsersRepository.findOne(Username.toLowerCase());
+  async findUser(username) {
+    const { rows: users } = await UsersRepository.findByUsername(username.toLowerCase());
+    if (users.length < 1){
+      return {status: 404, message: 'username does not exists!'};
+    }
+    return {status: 200, message: users.map(user => new ViewOnlyUser(user))};
   }
 
   async createUser(username, email, password) {
@@ -32,7 +38,7 @@ class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const { rows: [createdUser] } = await UsersRepository.create(username, email, hashedPassword);
-    return {status: 201, message: createdUser};
+    return {status: 201, message: new CreateOnlyUser(createdUser)};
   }
 
   async updateUser(username, password) {

@@ -15,7 +15,7 @@ class Server {
 
   setup(config) {
     this.server.set('env', config.env);
-    this.server.set('hostname', config.hostname);
+    this.server.set('hostname', config.host);
     this.server.set('port', config.port);
 
     this.server.use(logger(config.env));

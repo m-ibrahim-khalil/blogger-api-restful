@@ -7,16 +7,16 @@ class UsersController {
 
   async getAllUsers(req, res) {
     const data = await UsersService.findAllUsers();
-    return res.status(200).send(data.rows);
+    return res.status(data.status).send(data.message);
   }
 
-  async getUserById(req, res) {
-    const id = req.params.id;
-    const data = await UsersService.findUser(id);
-    if (data.rows.length < 1){
-      return res.status(404).send("User not found!");
+  async getUserByUsername(req, res) {
+    const username = req.params.username;
+    if(!username){
+      return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    return res.status(200).send(data.rows);
+    const data = await UsersService.findUser(username);
+    return res.status(data.status).send(data.message);
   }
 
   async createUser(req, res) {
@@ -28,20 +28,26 @@ class UsersController {
     if (data) return res.status(data.status).send(data.message);
   }
 
-  async deleteUserById(req, res) {
-    const id = req.params.id;
-    const data = await UsersService.removeUser(id);
+  async deleteUserByUsername(req, res) {
+    const username = req.params.username;
+    if(!username){
+      return res.status(400).send({ message: 'Invalid request parameter!' });
+    }
+    const data = await UsersService.removeUser(username);
     return res.status(data.status).send(data.message);
   }
 
-  async updateUserById(req, res) {
-    const id = req.params.id;
+  async updateUserByUsername(req, res) {
+    const username = req.params.username;
+    if(!username){
+      return res.status(400).send({ message: 'Invalid request parameter!' });
+    }
     const { Password }  = req.body;
     if (!Password) {
       res.status(400).send({ message: 'Invalid request body' });
       return;
     }
-    const data = await UsersService.updateUser(id, Password);
+    const data = await UsersService.updateUser(username, Password);
     return res.status(data.status).send({ message:  data.message});
   }
 }

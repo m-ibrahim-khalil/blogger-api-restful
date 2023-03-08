@@ -1,8 +1,8 @@
 const fs = require('fs');
 const server = require('./server');
-const config = JSON.parse(fs.readFileSync('config/server.json', 'utf8'));
+const {development} = require('./config/server');
 
-server.setup(config.development);
+server.setup(development);
 server.start();
 
 module.exports = server;

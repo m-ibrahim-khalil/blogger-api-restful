@@ -9,7 +9,6 @@ class UsersRepository {
   async findAll() {
     try{
         const data = await db.query("SELECT * FROM users");
-        console.log(data.rows);
         return data;
       } catch(err){
         console.log(err.stack);
@@ -17,10 +16,9 @@ class UsersRepository {
       }
   }
 
-  async findOne(Username) {
+  async findByUsername(username) {
     try{
-        const data = await db.query("SELECT * FROM users WHERE Username = $1", [Username]);
-        console.log(data.rows);
+        const data = await db.query("SELECT * FROM users WHERE username = $1", [username]);
         return data;
       } catch(err){
         console.log(err.stack);
@@ -52,9 +50,9 @@ class UsersRepository {
     }
   }
 
-  async removeUser(Username) {
+  async removeUser(username) {
     try{
-        return await db.query("DELETE FROM users WHERE Username = $1", [Username]);
+        return await db.query("DELETE FROM users WHERE username = $1", [username]);
       } catch(err){
         console.log(err.stack);
         throw err;

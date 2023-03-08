@@ -9,9 +9,9 @@ UsersRouter.route('/')
   .get(UsersController.getAllUsers)
   .post(UsersController.createUser);
 
-UsersRouter.route('/:id')
-  .get(UsersController.getUserById)
-  .put(UsersController.updateUserById)
-  .delete(UsersController.deleteUserById);
+UsersRouter.route('/:username')
+  .get(UsersController.getUserByUsername)
+  .put(UsersController.updateUserByUsername)
+  .delete(UsersController.deleteUserByUsername);
 
 module.exports = UsersRouter;
