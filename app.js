@@ -1,6 +1,5 @@
-const fs = require('fs');
 const server = require('./server');
-const {development} = require('./config/server');
+const {development} = require('./config/configuration');
 
 server.setup(development);
 server.start();

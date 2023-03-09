@@ -12,6 +12,7 @@ class UsersController {
 
   async getUserByUsername(req, res) {
     const username = req.params.username;
+    // console.log(username);
     if(!username){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }

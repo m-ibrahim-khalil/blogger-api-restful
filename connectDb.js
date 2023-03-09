@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool;
-const {dbConfig} = require('./config/server')
+const {dbConfig} = require('./config/configuration')
 
 const pool = new Pool(dbConfig);
 
@@ -13,7 +13,7 @@ const createTable = async () => await pool.query(
     updatedAt DATE DEFAULT Now())`
 );
 
-console.log("DB table creation: ", createTable().then((val)=>"").catch(err=>"err"));
+console.log("DB table creation: ", createTable().then((val)=>console.log(val)).catch(err=>console.log(err)));
 
 module.exports = pool;
 
