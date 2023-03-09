@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-const data = process.env
-
 const development = {
   env: "dev",
   port : process.env.PORT || 3000,

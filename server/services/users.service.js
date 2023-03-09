@@ -1,6 +1,8 @@
 "use strict";
 
 const bcrypt = require ('bcrypt');
+var emailValidator = require("email-validator");
+
 const { UsersRepository } = require('../ repositories');
 const {ViewOnlyUser, CreateOnlyUser} = require('../dto/users')
 
@@ -12,7 +14,7 @@ class UsersService {
     return  {status: 200, message:users.map(user => new ViewOnlyUser(user))};
   }
 
-  async findUser(username) {
+  async findUser(username) {  
     const { rows: users } = await UsersRepository.findByUsername(username.toLowerCase());
     if (users.length < 1){
       return {status: 404, message: 'username does not exists!'};
@@ -26,6 +28,10 @@ class UsersService {
         return { status: 400, message: 'Username can only contain English alphabets and digits'};
     }
 
+    if (!emailValidator.validate(email)){
+        return {status:403, message:'Email is not valid'};
+    }
+
     const existingUsername = await UsersRepository.existUsername(username);
     if (existingUsername.rows.length > 0) {
         return {status: 409, message: 'Username already exists'};
@@ -36,14 +42,14 @@ class UsersService {
         return {status: 409, message: 'Email already exists'};
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
     const { rows: [createdUser] } = await UsersRepository.create(username, email, hashedPassword);
     return {status: 201, message: new CreateOnlyUser(createdUser)};
   }
 
   async updateUser(username, password) {
-    const hashedPassword = await bcrypt.hash(password, 10)
-    const {rowCount} = await UsersRepository.updateUser(username.toLowerCase(), hashedPassword)
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
+    const {rowCount} = await UsersRepository.updateUser(username.toLowerCase(), hashedPassword);
     if (rowCount === 0) {
         return {status: 404, message: 'User not found'};
     }
