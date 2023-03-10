@@ -9,57 +9,69 @@ class UsersService {
   constructor() {}
 
   async findAllUsers() {
-    const { rows: users } = await UsersRepository.findAll();
-    return  {status: 200, message:users.map(user => new ViewOnlyUser(user))};
+    try{
+      const users = await UsersRepository.findAll();
+      return  {status: 200, message: users.map(user => new ViewOnlyUser(user))};
+    }catch(err){
+      return {status: 500, message: `Unhandled error: ${err.name} ---------- ${err.errors[0].message}`};
+    }
   }
 
-  async findUser(username) {  
-    const { rows: users } = await UsersRepository.findByUsername(username.toLowerCase());
-    if (Validator.checkEmptyArray(users)){
-      return {status: 404, message: 'username does not exists!'};
+  async findUser(username) {
+    try{
+      const users = await UsersRepository.findByUsername(username.toLowerCase());
+      if (Validator.checkEmptyArray(users)){
+        return {status: 404, message: 'username does not exists!'};
+      }
+      return {status: 200, message: users.map(user => new ViewOnlyUser(user))};
+    }catch(err){
+      return {status: 409, message: `Unhandled error: ${err.name} ---------- ${err.errors[0].message}`};
     }
-    return {status: 200, message: users.map(user => new ViewOnlyUser(user))};
   }
 
   async createUser(username, email, password) {
-    username = username.toLowerCase();
-    if (!Validator.validateUsename(username)) {
-        return { status: 400, message: 'Username can only contain English alphabets and digits'};
-    }
+    try{
+      username = username.toLowerCase();
+      const existingUsername = await UsersRepository.existUsername(username);
+      if (!Validator.checkEmptyArray(existingUsername)) {
+          return {status: 409, message: 'Username already exists'};
+      }
 
-    if (!Validator.validateEmail(email)){
-        return {status:400, message:'Email is not valid'};
+      const existingEmail = await UsersRepository.existEmail(email);
+      if (!Validator.checkEmptyArray(existingEmail)) {
+          return {status: 409, message: 'Email already exists'};
+      }
+      const hashedPassword = await generateHash(password);
+      const createdUser = await UsersRepository.create(username, email, hashedPassword);
+      return {status: 201, message: new CreateOnlyUser(createdUser)};
+    }catch(err){
+      return {status: 409, message: `Unhandled error: ${err.name} ---------- ${err.errors[0].message}`};
     }
-
-    const { rows: existingUsername } = await UsersRepository.existUsername(username);
-    if (!Validator.checkEmptyArray(existingUsername)) {
-        return {status: 409, message: 'Username already exists'};
-    }
-
-    const { rows: existingEmail }  = await UsersRepository.existEmail(email);
-    if (!Validator.checkEmptyArray(existingEmail)) {
-        return {status: 409, message: 'Email already exists'};
-    }
-    const hashedPassword = await generateHash(password);
-    const { rows: [createdUser] } = await UsersRepository.create(username, email, hashedPassword);
-    return {status: 201, message: new CreateOnlyUser(createdUser)};
   }
 
   async updateUser(username, password) {
-    const hashedPassword = await generateHash(password);
-    const {rowCount} = await UsersRepository.updateUser(username.toLowerCase(), hashedPassword);
-    if (rowCount === 0) {
-        return {status: 404, message: 'User not found'};
+    try{
+      const hashedPassword = await generateHash(password);
+      const user = await UsersRepository.updateUser(username.toLowerCase(), hashedPassword);
+      if (user[0] === 0) {
+          return {status: 404, message: 'User not found'};
+      }
+      return {status: 200, message: 'User updated!'};
+    }catch(err){
+      return {status: 409, message: `Unhandled error: ${err.name} ---------- ${err.errors[0].message}`};
     }
-    return {status: 200, message: 'User updated!'};
   }
 
   async removeUser(Username) {
-    const {rowCount} = await UsersRepository.removeUser(Username.toLowerCase());
-    if (rowCount === 0) {
-        return {status: 404, message: 'User not found'};
+    try{
+      const user = await UsersRepository.removeUser(Username.toLowerCase());
+      if (user === 0) {
+          return {status: 404, message: 'User not found'};
+      }
+      return {status: 202, message: 'User removed!'};
+    }catch(err){
+      return {status: 409, message: `Unhandled error: ${err.name} ---------- ${err.errors[0].message}`};
     }
-    return {status: 202, message: 'User removed!'};
   }
 }
 

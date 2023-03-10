@@ -3,8 +3,8 @@ class CreateOnlyUser{
         this.username = user.username;
         this.email = user.email;
         this.password = user.password;
-        this.createdAt = user.createdat;
-        this.updatedAt = user.updatedat;
+        this.createdAt = user.createdAt;
+        this.updatedAt = user.updatedAt;
         this.id = user.id;
     }
 }

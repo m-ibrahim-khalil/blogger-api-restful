@@ -1,6 +1,6 @@
 "use strict";
 
-var emailValidator = require("email-validator");
+const emailValidator = require("email-validator");
 
 class Validator {
   constructor() {}
