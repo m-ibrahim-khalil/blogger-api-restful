@@ -1,5 +1,4 @@
 "use strict";
-
 const UsersService = require('../services/users.service');
 
 class UsersController {

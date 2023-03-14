@@ -1,14 +1,8 @@
 "use strict";
-
 const emailValidator = require("email-validator");
 
 class Validator {
   constructor() {}
-
-  validateUsename(username){
-    if(/^[a-zA-Z0-9]+$/.test(username)) return true;
-    return false;
-  }
 
   validateEmail(email){
     if(emailValidator.validate(email)) return true;
