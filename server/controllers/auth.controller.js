@@ -1,7 +1,5 @@
 "use strict";
-
-const AuthService = require('../services/auth.service');
-const jwt = require('jsonwebtoken')
+const {AuthService} = require('../services');
 
 class AuthController {
   constructor() {}

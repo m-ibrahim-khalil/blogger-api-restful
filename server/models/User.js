@@ -4,15 +4,8 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../connectDb');
 
 class User extends Model {
-    static classLevelMethod() {
-        return 'foo';
-    }
-    instanceLevelMethod() {
-        return 'bar';
-    }
     async isPasswordCorrect(password) {
         const isCorrect = await bcrypt.compare(password, this.password);
-        console.log(this.password, isCorrect);
         return isCorrect;
     }
 }
