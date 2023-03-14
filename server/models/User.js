@@ -1,3 +1,5 @@
+'use strict'
+const bcrypt = require ('bcrypt');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../connectDb');
 
@@ -8,8 +10,10 @@ class User extends Model {
     instanceLevelMethod() {
         return 'bar';
     }
-    getFullname() {
-        return [this.firstname, this.lastname].join(' ');
+    async isPasswordCorrect(password) {
+        const isCorrect = await bcrypt.compare(password, this.password);
+        console.log(this.password, isCorrect);
+        return isCorrect;
     }
 }
 
@@ -20,6 +24,7 @@ User.init({
         allowNull: false,
         primaryKey: true,
     },
+
     username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -58,7 +63,7 @@ User.init({
 }, {sequelize});
 
 (async () => {
-    await sequelize.sync({ force: true });
+    await sequelize.sync(); //{ force: true }
     // Code here
 })();
 

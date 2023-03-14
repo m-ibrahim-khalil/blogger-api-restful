@@ -19,15 +19,6 @@ class UsersController {
     return res.status(data.status).send(data.message);
   }
 
-  async createUser(req, res) {
-    const {Username, Email, Password} = await req.body;
-    if (!Username || !Email || !Password) {
-      return res.status(400).send({ message: 'Invalid request body' });
-    }
-    const data = await UsersService.createUser(Username, Email, Password);
-    if (data) return res.status(data.status).send(data.message);
-  }
-
   async deleteUserByUsername(req, res) {
     const username = req.params.username;
     if(!username){

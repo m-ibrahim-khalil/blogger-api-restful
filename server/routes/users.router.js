@@ -6,8 +6,8 @@ const UsersRouter = express.Router();
 const { UsersController } = require('../controllers');
 
 UsersRouter.route('/')
-  .get(UsersController.getAllUsers)
-  .post(UsersController.createUser);
+  .get(UsersController.getAllUsers);
+  // .post(UsersController.createUser);
 
 UsersRouter.route('/:username')
   .get(UsersController.getUserByUsername)
