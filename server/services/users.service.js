@@ -15,13 +15,14 @@ class UsersService {
     }
   }
 
-  async findUser(username) {
+  async findUser(username, dto=true) {
     try{
-      const user = await UsersRepository.findByUsername(username);
+      let user = await UsersRepository.findByUsername(username);
       if (!user){
         return {status: 404, message: 'username does not exists!'};
       }
-      return {status: 200, message: new ViewOnlyUser(user)};
+      user = dto ? new ViewOnlyUser(user) : user;
+      return {status: 200, message: user};
     }catch(err){
       return {status: 409, message: `Unhandled error: ${err.name}`};
     }
@@ -66,18 +67,6 @@ class UsersService {
           return {status: 404, message: 'User not found'};
       }
       return {status: 202, message: 'User removed!'};
-    }catch(err){
-      return {status: 409, message: `Unhandled error: ${err.name}`};
-    }
-  }
-
-  async __getPassword(username){
-    try{
-      const user = await UsersRepository.findByUsername(username);
-      if (!user){
-        return {status: 404, message: 'username does not exists!'};
-      }
-      return {status: 200, password: user.password};
     }catch(err){
       return {status: 409, message: `Unhandled error: ${err.name}`};
     }

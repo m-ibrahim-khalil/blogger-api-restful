@@ -19,11 +19,10 @@ class AuthService {
 
     async loginUser(username, password){
         try{
-            const {status, message} = await UserService.findUser(username);
+            const {status, message} = await UserService.findUser(username, false);
             if(status.toString().startsWith('4')) return {status: status, message: message};
-            const data = await UserService.__getPassword(username);
-            if(data.status.toString().startsWith('4')) return {status: data.status, message: data.message}
-            if(!comparePassword(password, data.password)) return {status: 404, message: 'incorrect password!'};
+            const hashedPassword = message.password
+            if(!comparePassword(password, hashedPassword)) return {status: 404, message: 'incorrect password!'};
             const accessToken = createJWT({username: username});
             return {status: 200, message: "Login Succes!", accessToken: accessToken};
         } catch(err){
