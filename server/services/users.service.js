@@ -1,7 +1,7 @@
 "use strict";
 const {generateHashPassword, validator} = require('../utils');
 const { UsersRepository } = require('../ repositories');
-const {ViewOnlyUser, CreateOnlyUser} = require('../dto/users')
+const {ViewOnlyUser, CreateOnlyUser} = require('../dto/users');
 
 class UsersService {
   constructor() {}
@@ -17,11 +17,11 @@ class UsersService {
 
   async findUser(username) {
     try{
-      const users = await UsersRepository.findByUsername(username);
-      if (validator.checkEmptyArray(users)){
+      const user = await UsersRepository.findByUsername(username);
+      if (!user){
         return {status: 404, message: 'username does not exists!'};
       }
-      return {status: 200, message: users.map(user => new ViewOnlyUser(user))};
+      return {status: 200, message: new ViewOnlyUser(user)};
     }catch(err){
       return {status: 409, message: `Unhandled error: ${err.name}`};
     }
@@ -29,13 +29,13 @@ class UsersService {
 
   async createUser(username, email, password) {
     try{
-      const existingUsernames = await UsersRepository.findByUsername(username);
-      if (!validator.checkEmptyArray(existingUsernames)) {
+      const existingUsername = await UsersRepository.findByUsername(username);
+      if (existingUsername) {
           return {status: 409, message: 'Username already exists'};
       }
 
-      const existingEmails = await UsersRepository.findByEmail(email);
-      if (!validator.checkEmptyArray(existingEmails)) {
+      const existingEmail = await UsersRepository.findByEmail(email);
+      if (existingEmail) {
           return {status: 409, message: 'Email already exists'};
       }
       const hashedPassword = await generateHashPassword(password);
@@ -73,11 +73,11 @@ class UsersService {
 
   async __getPassword(username){
     try{
-      const users = await UsersRepository.findByUsername(username);
-      if (validator.checkEmptyArray(users)){
+      const user = await UsersRepository.findByUsername(username);
+      if (!user){
         return {status: 404, message: 'username does not exists!'};
       }
-      return {status: 200, password: users[0].password};
+      return {status: 200, password: user.password};
     }catch(err){
       return {status: 409, message: `Unhandled error: ${err.name}`};
     }
