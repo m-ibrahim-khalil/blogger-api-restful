@@ -1,7 +1,7 @@
 "use strict";
-const {generateHashPassword, validator} = require('../utils');
+const {generateHashPassword} = require('../utils');
 const { UsersRepository } = require('../ repositories');
-const {ViewOnlyUser, CreateOnlyUser} = require('../dto/users');
+const {ViewOnlyUser, CreateOnlyUser} = require('../dto/user');
 
 class UsersService {
   constructor() {}

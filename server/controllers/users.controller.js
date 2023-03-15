@@ -1,5 +1,5 @@
 "use strict";
-const UsersService = require('../services/users.service');
+const UsersService = require('../services');
 
 class UsersController {
   constructor() {}
