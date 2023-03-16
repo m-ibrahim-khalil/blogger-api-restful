@@ -7,7 +7,7 @@ class StorysRepository {
 
   async findAll() {
     try{
-        const stories = await Story.findAll();
+        const stories = await Story.findAll({include: 'author'});
         return stories;
       } catch(err){
         console.log(err.stack);
@@ -20,7 +20,8 @@ class StorysRepository {
         const story = await Story.findOne({
           where: { 
             id: id
-           }
+           },
+           include: 'author'
         });
         return story;
       } catch(err){
@@ -34,7 +35,8 @@ class StorysRepository {
         const stories = await Story.findAll({
           where: { 
             authorId: authorId
-           }
+           },
+           include: 'author'
         });
         return stories;
       } catch(err){
@@ -43,9 +45,9 @@ class StorysRepository {
       }
   }
 
-  async create(title, description) {
+  async create(title, description, authorId) {
     try{
-        const story = await Story.create({title: title, description: description});
+        const story = await Story.create({title: title, description: description, authorId: authorId});
         return story;
       } catch(err){
         console.log(err);

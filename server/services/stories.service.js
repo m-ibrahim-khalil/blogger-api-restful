@@ -1,6 +1,7 @@
 "use strict";
 const { StoriesRepository } = require('../ repositories');
 const {ViewOnlyStory, CreateOnlyStory} = require('../dto/story');
+const UsersService = require('./users.service')
 
 class StoriesService {
   constructor() {}
@@ -38,9 +39,10 @@ class StoriesService {
     }
   }
 
-  async createStroy(title, description) {
+  async createStroy(title, description, username) {
     try{
-      const createdStory = await StoriesRepository.create(title, description);
+      const {message} = await UsersService.findUser(username);
+      const createdStory = await StoriesRepository.create(title, description, message.id);
       return {status: 201, message: new CreateOnlyStory(createdStory)};
     }catch(err){
       return {status: 409, message: `Unhandled error: ${err.name}`};

@@ -1,14 +1,8 @@
 'use strict'
-const bcrypt = require ('bcrypt');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../connectDb');
 
-class User extends Model {
-    async isPasswordCorrect(password) {
-        const isCorrect = await bcrypt.compare(password, this.password);
-        return isCorrect;
-    }
-}
+class User extends Model {}
 
 User.init({
     id: {
@@ -54,10 +48,5 @@ User.init({
         }
     }
 }, {sequelize});
-
-(async () => {
-    await sequelize.sync(); //{ force: true }
-    // Code here
-})();
 
 module.exports = User;

@@ -1,6 +1,7 @@
 'use strict'
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../connectDb');
+const User = require('./User')
 
 class Story extends Model {}
 
@@ -19,12 +20,11 @@ Story.init({
     description: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    authorId: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
     }
 }, {sequelize});
+
+User.hasMany(Story, {foreignKey: 'authorId'})
+Story.belongsTo(User, {as: 'author'});
 
 (async () => {
     await sequelize.sync({ force: false });     //{ force: true }

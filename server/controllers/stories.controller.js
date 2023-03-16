@@ -29,10 +29,11 @@ class StoriesControler {
 
   async createStory(req, res) {
     const {title, description} = await req.body;
-    if (!title || !description) {
+    const username = req.username;
+    if (!title || !description || !username) {
       return res.status(400).send({ message: 'Invalid request body' });
     }
-    const {status,message} = await StoriesService.createStroy(title, description);
+    const {status,message} = await StoriesService.createStroy(title, description, username);
     if(status.toString().startsWith('4')){
         return res.status(status).send(message);
     }
