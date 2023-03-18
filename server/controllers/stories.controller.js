@@ -5,17 +5,17 @@ class StoriesControler {
   constructor() {}
 
   async getAllStories(req, res) {
-    const data = await StoriesService.findAllStories();
-    return res.status(data.status).send(data.message);
+    const {status, message: stories} = await StoriesService.findAllStories();
+    return res.status(status).send({message: stories});
   }
 
-  async getStroyById(req, res) {
+  async getStoryById(req, res) {
     const id = req.params.id;
     if(!id){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    const data = await StoriesService.findStoryById(id);
-    return res.status(data.status).send(data.message);
+    const {status, message: story} = await StoriesService.findStoryById(id);
+    return res.status(status).send({message: story});
   }
 
   async getStroiesByAuthor(req, res) {
@@ -23,8 +23,8 @@ class StoriesControler {
     if(!authorId){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    const data = await StoriesService.findStoriesByAuthor(authorId);
-    return res.status(data.status).send(data.message);
+    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId);
+    return res.status(status).send({message: stories});
   }
 
   async createStory(req, res) {
@@ -33,11 +33,8 @@ class StoriesControler {
     if (!title || !description || !username) {
       return res.status(400).send({ message: 'Invalid request body' });
     }
-    const {status,message} = await StoriesService.createStroy(title, description, username);
-    if(status.toString().startsWith('4')){
-        return res.status(status).send(message);
-    }
-    return res.status(status).send(message);
+    const {status,message: story} = await StoriesService.createStory(title, description, username);
+    return res.status(status).send({message: story});
   }
 
   async updateStoryById(req, res) {
@@ -49,8 +46,8 @@ class StoriesControler {
     if (!title || !description) {
         return res.status(400).send({ message: 'Invalid request body' });
     }
-    const data = await StoriesService.updateStoryById(id, title, description);
-    return res.status(data.status).send({ message:  data.message});
+    const {status, message: body} = await StoriesService.updateStoryById(id, title, description);
+    return res.status(status).send({ message:  body});
   }
 
   async deleteStoryById(req, res) {
@@ -58,8 +55,8 @@ class StoriesControler {
     if(!id){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    const data = await StoriesService.removeStoryById(id);
-    return res.status(data.status).send(data.message);
+    const {status, message: story} = await StoriesService.deleteStoryById(id);
+    return res.status(status).send(story);
   }
 }
 

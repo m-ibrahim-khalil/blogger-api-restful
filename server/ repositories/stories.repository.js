@@ -69,7 +69,7 @@ class StorysRepository {
     }
   }
 
-  async removeStory(id) {
+  async sdeleteStory(id) {
     try{
         const data = await Story.destroy({
           where: {

@@ -10,7 +10,7 @@ StoriesRouter.route('/')
   .post(AuthenticationMiddleware, StoriesControler.createStory);
 
 StoriesRouter.route('/:id')
-  .get(StoriesControler.getStroyById)
+  .get(StoriesControler.getStoryById)
   .put(AuthenticationMiddleware, AuthorizationMiddleware, StoriesControler.updateStoryById)
   .delete(AuthenticationMiddleware, AuthorizationMiddleware, StoriesControler.deleteStoryById);
 
