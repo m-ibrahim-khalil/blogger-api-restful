@@ -69,7 +69,7 @@ class StorysRepository {
     }
   }
 
-  async sdeleteStory(id) {
+  async deleteStory(id) {
     try{
         const data = await Story.destroy({
           where: {
@@ -82,7 +82,6 @@ class StorysRepository {
         throw err;
       }
   }
-
 }
 
 module.exports = new StorysRepository();
