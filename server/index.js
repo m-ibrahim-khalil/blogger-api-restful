@@ -1,6 +1,5 @@
 'use strict';
 
-const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const {InvalidRoutesMiddleware} = require('./middlewares')
@@ -26,18 +25,13 @@ class Server {
 
     this.server.use('/', router);
     this.server.use(InvalidRoutesMiddleware);
-
-    // this.server.use((req, res, next) => {
-    //   next(createError(404));
-    // });
-
+    this.server.use(errorHandlerMiddleware);
   }
 
   start() {
     let hostname = this.server.get('hostname');
     let port = this.server.get('port');
     this.server.listen(port, () => {
-      console.log('Express server listening on - http://' + hostname + ':' + port)
       logger.info('Express server listening on - http://' + hostname + ':' + port);
     });
   }
