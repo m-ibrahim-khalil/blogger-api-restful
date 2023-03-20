@@ -49,7 +49,7 @@ class UsersRepository {
     }
   }
 
-  async removeUser(username) {
+  async deleteUser(username) {
     try{
         const user = await User.destroy({
           where: {
