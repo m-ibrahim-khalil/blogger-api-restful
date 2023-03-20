@@ -22,7 +22,7 @@ class AuthService {
             const {status, message: user} = await UserService.findUser(username, false);
             if(status.toString().startsWith('4' || '5')) return {status: status, message: user};
             const hashedPassword = user.password
-            if(!comparePassword(password, hashedPassword)) return {status: 404, message: 'incorrect password!'};
+            if(!await comparePassword(password, hashedPassword)) return {status: 404, message: 'incorrect password!'};
             const accessToken = createJWT({username: username});
             return {status: 200, message: "Login Succes!", accessToken: accessToken};
         } catch(err){

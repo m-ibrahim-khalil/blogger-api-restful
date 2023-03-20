@@ -1,12 +1,13 @@
 "use strict";
 const {UsersService} = require('../services');
+const {ConstentNegotiation} = require('../utils');
 
 class UsersController {
   constructor() {}
 
   async getAllUsers(req, res) {
     const {status, message: users} = await UsersService.findAllUsers();
-    return res.status(status).send({message: users});
+    return new ConstentNegotiation(res, status, {message: users}).sendResponse();
   }
 
   async getUserByUsername(req, res) {
@@ -15,7 +16,7 @@ class UsersController {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: user} = await UsersService.findUser(username);
-    return res.status(status).send({message: user});
+    return new ConstentNegotiation(res, status, {message: user}).sendResponse();
   }
 
   async updateUserByUsername(req, res) {
@@ -28,7 +29,7 @@ class UsersController {
       return res.status(400).send({ message: 'Invalid request body' });
     }
     const {status, message: user} = await UsersService.updateUserByUsername(username, Password);
-    return res.status(status).send({message: user});
+    return new ConstentNegotiation(res, status, {message: user}).sendResponse();
   }
 
   async deleteUserByUsername(req, res) {
@@ -37,7 +38,7 @@ class UsersController {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: user} = await UsersService.deleteUserByUsername(username);
-    return res.status(status).send({message: user});
+    return new ConstentNegotiation(res, status, {message: user}).sendResponse();;
   }
 }
 

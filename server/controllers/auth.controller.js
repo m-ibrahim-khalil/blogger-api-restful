@@ -1,5 +1,6 @@
 "use strict";
 const {AuthService} = require('../services');
+const {ConstentNegotiation} = require('../utils');
 
 class AuthController {
   constructor() {}
@@ -9,12 +10,12 @@ class AuthController {
     if (!Username || !Email || !Password) {
       return res.status(400).send({ message: 'Invalid request body' });
     }
-    const {status,message, accessToken} = await AuthService.registerUser(Username, Email, Password);
+    const {status, message, accessToken} = await AuthService.registerUser(Username, Email, Password);
     if(status.toString().startsWith('4')){
         return res.status(status).send(message);
     }
     res.cookie('jwt', accessToken, {httpOnly: true});
-    return res.status(status).send(message);
+    return new ConstentNegotiation(res, status, {message: message}).sendResponse();
   }
 
   async login(req, res) {
@@ -28,7 +29,7 @@ class AuthController {
     }
     
     res.cookie('jwt', accessToken, {httpOnly: true});
-    return res.status(status).send(message);
+    return new ConstentNegotiation(res, status, {message: message}).sendResponse();
   }
 
 }

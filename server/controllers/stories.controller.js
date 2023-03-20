@@ -1,12 +1,13 @@
 "use strict";
 const {StoriesService} = require('../services');
+const {ConstentNegotiation} = require('../utils');
 
 class StoriesControler {
   constructor() {}
 
   async getAllStories(req, res) {
     const {status, message: stories} = await StoriesService.findAllStories();
-    return res.status(status).send({message: stories});
+    return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
   async getStoryById(req, res) {
@@ -15,7 +16,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: story} = await StoriesService.findStoryById(id);
-    return res.status(status).send({message: story});
+    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async getStroiesByAuthor(req, res) {
@@ -24,7 +25,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId);
-    return res.status(status).send({message: stories});
+    return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
   async createStory(req, res) {
@@ -34,7 +35,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request body' });
     }
     const {status,message: story} = await StoriesService.createStory(title, description, username);
-    return res.status(status).send({message: story});
+    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async updateStoryById(req, res) {
@@ -46,8 +47,8 @@ class StoriesControler {
     if (!title || !description) {
         return res.status(400).send({ message: 'Invalid request body' });
     }
-    const {status, message: body} = await StoriesService.updateStoryById(id, title, description);
-    return res.status(status).send({ message:  body});
+    const {status, message: story} = await StoriesService.updateStoryById(id, title, description);
+    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async deleteStoryById(req, res) {
@@ -56,7 +57,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: story} = await StoriesService.deleteStoryById(id);
-    return res.status(status).send(story);
+    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
   }
 }
 
