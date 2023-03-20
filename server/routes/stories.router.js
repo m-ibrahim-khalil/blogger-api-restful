@@ -2,8 +2,7 @@
 const express = require('express');
 const StoriesRouter = express.Router();
 const { StoriesControler } = require('../controllers');
-const AuthenticationMiddleware = require('../middleware/authentication.middleware')
-const AuthorizationMiddleware = require('../middleware/authorization.middleware')
+const {AuthenticationMiddleware, AuthorizationMiddleware} = require('../middlewares')
 
 StoriesRouter.route('/')
   .get(StoriesControler.getAllStories)
