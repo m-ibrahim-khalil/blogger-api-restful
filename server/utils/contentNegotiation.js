@@ -1,6 +1,7 @@
 'use strict'
 const js2xmlparser = require("js2xmlparser");
 const json2html = require('json-to-html');
+const {toPlainText} = require('json-to-plain-text');
 
 class ConstentNegotiation{
     constructor(res, statuscode, data) {
@@ -15,7 +16,7 @@ class ConstentNegotiation{
     }
 
     sendTextResponse (){
-        const textData = JSON.stringify(this.data);
+        const textData = toPlainText(this.data, false, true);
         return this.res.status(this.statuscode).send(textData);
     }
 
@@ -24,14 +25,14 @@ class ConstentNegotiation{
     }
 
     sendHTMLResponse (){
-        return this.res.status(this.statuscode).send(json2html(this.data));
+        return this.res.status(this.statuscode).send(json2html(this.data, 4));
     }
 
     sendResponse (){
         return this.res.format({
             'text/xml': this.sendXMLResponse.bind(this),
             'application/json': this.sendJsonResponse.bind(this),
-            'text/text': this.sendTextResponse.bind(this),
+            'text/plain': this.sendTextResponse.bind(this),
             'text/html': this.sendHTMLResponse.bind(this),
             default: this.sendJsonResponse.bind(this)
         });
