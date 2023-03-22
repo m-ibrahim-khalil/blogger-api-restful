@@ -2,6 +2,7 @@
 const {createJWT, comparePassword} = require('../utils');
 const UserService = require('./users.service');
 const {BadRequestError} = require('../errors');
+const {StatusCodes} = require('../utils');
 
 
 class AuthService {
@@ -22,7 +23,7 @@ class AuthService {
             const {status, message: user} = await UserService.findUser(username, false);
             const hashedPassword = user.password
             if(!await comparePassword(password, hashedPassword)){
-                throw new BadRequestError({name: "Authentication Failed!", statusCode: 401, description: "Incorrect password!"});
+                throw new BadRequestError({name: "Authentication Failed!", statusCode: StatusCodes.UNAUTHORIZED, description: "Incorrect password!"});
             }
             const accessToken = createJWT({username: username});
             return {status: 200, message: "Login Succes!", accessToken: accessToken};

@@ -1,4 +1,4 @@
-const StatusCodes = require('../utils/httpStatusCode');
+const {StatusCodes} = require('../utils');
 const CustomAPIError = require('./customApi.error');
 
 class InternalServerError extends CustomAPIError {

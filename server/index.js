@@ -25,7 +25,7 @@ class Server {
 
     this.server.use('/', router);
     this.server.use(InvalidRoutesMiddleware);
-    // this.server.use(ErrorHandlerMiddleware);
+    this.server.use(ErrorHandlerMiddleware);
   }
 
   start() {

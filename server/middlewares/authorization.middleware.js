@@ -1,7 +1,7 @@
 'use strict';
 const {UsersService, StoriesService} = require('../services');
 const {BadRequestError} = require('../errors');
-
+const {StatusCodes} = require('../utils');
 
 const StoryAuthorizationMiddleware = async (req, res, next) => {
     const username = req.username;
@@ -12,10 +12,10 @@ const StoryAuthorizationMiddleware = async (req, res, next) => {
         const userId = user.message.id;
         const authorId = story.message.authorId;
         if(authorId === userId) next();
-        else throw new BadRequestError({name: "Authorization Failed!", statusCode: 403, description: "UnAuthorized user!"});
+        else throw new BadRequestError({name: "Authorization Failed!", statusCode: StatusCodes.FORBIDDEN, description: "UnAuthorized user!"});
     }
     catch(err){
-        throw err;
+        next(err);
     }
 }
 
@@ -23,10 +23,10 @@ const UserAuthorizationMiddleware = async (req, res, next) => {
     try{
         const username = req.username;
         if(req.params.username === username) next();
-        else throw new BaBadRequestError({name: "Authorization Failed!", statusCode: 403, description: "UnAuthorized user!"});
+        else throw new BaBadRequestError({name: "Authorization Failed!", statusCode: StatusCodes.FORBIDDEN, description: "UnAuthorized user!"});
     }
     catch(err){
-        throw err;
+        next(err);
     }
 }
 
