@@ -1,12 +1,14 @@
 "use strict";
 const {StoriesService} = require('../services');
-const {ConstentNegotiation} = require('../utils');
+const {ConstentNegotiation, getPagination} = require('../utils');
 
 class StoriesControler {
   constructor() {}
 
   async getAllStories(req, res) {
-    const {status, message: stories} = await StoriesService.findAllStories();
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    const {status, message: stories} = await StoriesService.findAllStories(limit, offset);
     return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
@@ -21,10 +23,12 @@ class StoriesControler {
 
   async getStroiesByAuthor(req, res) {
     const authorId = req.params.authorId;
+    const { page, size } = req.query;
     if(!authorId){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId);
+    const { limit, offset } = getPagination(page, size);
+    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset);
     return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
