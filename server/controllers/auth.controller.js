@@ -1,6 +1,6 @@
 "use strict";
 const {AuthService} = require('../services');
-const {ConstentNegotiation} = require('../utils');
+const {ContentNegotiation} = require('../utils');
 
 class AuthController {
   constructor() {}
@@ -15,7 +15,7 @@ class AuthController {
         return res.status(status).send(message);
     }
     res.cookie('jwt', accessToken, {httpOnly: true});
-    return new ConstentNegotiation(res, status, {message: message}).sendResponse();
+    return new ContentNegotiation(res, status, {message: message}).sendResponse();
   }
 
   async login(req, res) {
@@ -29,7 +29,7 @@ class AuthController {
     }
     
     res.cookie('jwt', accessToken, {httpOnly: true});
-    return new ConstentNegotiation(res, status, {message: message}).sendResponse();
+    return new ContentNegotiation(res, status, {message: message}).sendResponse();
   }
 
 }

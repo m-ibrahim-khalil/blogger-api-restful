@@ -3,7 +3,7 @@ const js2xmlparser = require("js2xmlparser");
 const json2html = require('json-to-html');
 const {toPlainText} = require('json-to-plain-text');
 
-class ConstentNegotiation{
+class ContentNegotiation{
     constructor(res, statuscode, data) {
         this.res = res;
         this.statuscode = statuscode;
@@ -39,4 +39,4 @@ class ConstentNegotiation{
     }
 }
 
-module.exports = ConstentNegotiation;
+module.exports = ContentNegotiation;
