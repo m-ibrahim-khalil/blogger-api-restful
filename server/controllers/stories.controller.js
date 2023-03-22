@@ -8,7 +8,7 @@ class StoriesControler {
   async getAllStories(req, res) {
     const { page, size } = req.query;
     const { limit, offset } = getPagination(page, size);
-    const {status, message: stories} = await StoriesService.findAllStories(limit, offset);
+    const {status, message: stories} = await StoriesService.findAllStories(limit, offset, page);
     return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
@@ -28,7 +28,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const { limit, offset } = getPagination(page, size);
-    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset);
+    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
     return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
   }
 

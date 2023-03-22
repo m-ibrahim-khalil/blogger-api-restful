@@ -7,11 +7,11 @@ const {getPagingData} = require('../utils')
 class StoriesService {
   constructor() {}
 
-  async findAllStories(limit, offset) {
+  async findAllStories(limit, offset, page) {
     try{
       const stories = await StoriesRepository.findAll(limit, offset);
-      const {totalItems, payload, totalPages, currentPage} = getPagingData(stories);
-      return  {status: 200, message: payload.map(story => new ViewOnlyStory(story))};
+      const response = getPagingData(stories, page, limit,  ViewOnlyStory);
+      return  {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }
@@ -29,11 +29,11 @@ class StoriesService {
     }
   }
 
-  async findStoriesByAuthor(authorId, limit, offset) {
+  async findStoriesByAuthor(authorId, limit, offset, page) {
     try{
       const stories = await StoriesRepository.findByAuthorId(authorId, limit, offset);
-      const {totalItems, payload, totalPages, currentPage} = getPagingData(stories);
-      return {status: 200, message: payload.map(story => new ViewOnlyStory(story))};
+      const response = getPagingData(stories, page, limit,  ViewOnlyStory);
+      return {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }

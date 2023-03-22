@@ -6,11 +6,11 @@ const {ViewOnlyUser, CreateOnlyUser} = require('../dto/user');
 class UsersService {
   constructor() {}
 
-  async findAllUsers(limit, offset) {
+  async findAllUsers(limit, offset, page) {
     try{
       const data = await UsersRepository.findAll(limit, offset);
-      const {totalItems, payload, totalPages, currentPage} = getPagingData(data);
-      return  {status: 200, message: payload.map(user => new ViewOnlyUser(user))};
+      const response = getPagingData(data, page, limit, ViewOnlyUser);
+      return  {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }

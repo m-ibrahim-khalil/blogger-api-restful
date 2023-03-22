@@ -9,7 +9,7 @@ class UsersController {
   async getAllUsers(req, res) {
     const { page, size } = req.query;
     const { limit, offset } = getPagination(page, size);
-    const {status, message: users} = await UsersService.findAllUsers(limit, offset);
+    const {status, message: users} = await UsersService.findAllUsers(limit, offset, page);
     return new ConstentNegotiation(res, status, {message: users}).sendResponse();
   }
 
