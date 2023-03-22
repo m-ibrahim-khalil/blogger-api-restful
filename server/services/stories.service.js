@@ -2,7 +2,7 @@
 const { StoriesRepository } = require('../ repositories');
 const {ViewOnlyStory, CreateOnlyStory} = require('../dto/story');
 const UsersService = require('./users.service');
-const CustomAPIError = require('../errors');
+const {HTTP404NotFoundError} = require('../errors');
 
 
 class StoriesService {
@@ -13,17 +13,17 @@ class StoriesService {
       const stories = await StoriesRepository.findAll();
       return  {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 
   async findStoryById(id) {
     try{
       const story = await StoriesRepository.findById(id);
-      if (!story) throw new CustomAPIError.NotFoundError('story does not exists!');
+      if (!story) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 200, message: new ViewOnlyStory(story)};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 
@@ -32,7 +32,7 @@ class StoriesService {
       const stories = await StoriesRepository.findByAuthorId(authorId);
       return {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 
@@ -42,27 +42,27 @@ class StoriesService {
       const createdStory = await StoriesRepository.create(title, description, user.id);
       return {status: 201, message: new CreateOnlyStory(createdStory)};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 
   async updateStoryById(id, title, description) {
     try{
       const story = await StoriesRepository.updateStory(id, title, description);
-      if (!story[0]) throw new CustomAPIError.NotFoundError('story not found!');
+      if (!story[0]) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 200, message: 'Story updated!'};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 
   async deleteStoryById(id) {
     try{
       const story = await StoriesRepository.deleteStory(id);
-      if (!story) throw new CustomAPIError.NotFoundError('story not found!');
+      if (!story) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 202, message: 'Story removed!'};
     }catch(err){
-      throw new CustomAPIError.InternalServerError(err);
+      throw err;
     }
   }
 }

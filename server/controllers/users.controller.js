@@ -1,6 +1,6 @@
 "use strict";
 const {UsersService} = require('../services');
-const CustomAPIError = require('../errors'); 
+const {BadRequestError} = require('../errors'); 
 
 class UsersController {
   constructor() {}
@@ -9,43 +9,49 @@ class UsersController {
     try{
       const {status, message: users} = await UsersService.findAllUsers();
       return res.status(status).send({message: users});
-    }catch(e){
-      next(e);
+    }catch(err){
+      next(err);
     }
   }
 
   async getUserByUsername(req, res, next) {
     try{
       const username = req.params.username;
-      if(!username) throw new CustomAPIError.BadRequestError('Invalid request parameter!');
+      if(!username) throw new BadRequestError({name: 'Validation Error!', description: 'Missing username paramenter!'});
       const {status, message: user} = await UsersService.findUser(username);
       return res.status(status).send({message: user});
-    } catch(e){ 
-      next(e);
+    } catch(err){ 
+      next(err);
     }
   }
 
   async updateUserByUsername(req, res, next) {
     try{
       const username = req.params.username;
-      if(!username) throw new CustomAPIError.BadRequestError('Invalid request parameter!');
+      if(!username) {
+        throw new BadRequestError({name: 'Validation Error!', description: 'Missing username paramenter!'});
+      }
       const { Password }  = req.body;
-      if (!Password) throw new CustomAPIError.BadRequestError('Empty Password body!');
+      if (!Password) {
+        throw new BadRequestError({name: 'Validation Error!', description: 'Password shouldnot be empty!'});
+      }
       const {status, message: user} = await UsersService.updateUserByUsername(username, Password);
       return res.status(status).send({message: user});
-    }catch(e){
-      next(e);
+    }catch(err){
+      next(err);
     }
   }
 
   async deleteUserByUsername(req, res, next) {
     try{
       const username = req.params.username;
-      if(!username) throw new CustomAPIError.BadRequestError('Invalid request parameter!');
+      if(!username) {
+        throw new BadRequestError({name: 'Validation Error!', description: 'Missing username paramenter!'});
+      }
       const {status, message: user} = await UsersService.deleteUserByUsername(username);
       return res.status(status).send({message: user});
-    }catch(e){
-      next(e);
+    }catch(err){
+      next(err);
     }
   }
 }

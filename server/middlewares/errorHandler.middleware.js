@@ -6,13 +6,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || 'Something went wrong! Please try again later.',
   };
 
-  if (err.name === 'ValidationError') {
-    customError.msg = Object.values(err.errors)
-      .map((item) => item.message)
-      .join(',');
+  if (err.name === 'SequelizeValidationError' || err.name == 'SequelizeDatabaseError')  customError.statusCode = 400;
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    customError.msg = err.errors[0].message;
     customError.statusCode = 400;
   }
-  return res.status(customError.statusCode).json({ msg: customError.msg });
+
+  return res.status(customError.statusCode).json({ message: customError.msg });
 };
 
 module.exports = errorHandlerMiddleware;

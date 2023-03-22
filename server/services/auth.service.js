@@ -1,7 +1,7 @@
 "use strict";
 const {createJWT, comparePassword} = require('../utils');
 const UserService = require('./users.service');
-const CustomAPIError = require('../errors');
+const {BadRequestError} = require('../errors');
 
 
 class AuthService {
@@ -22,7 +22,7 @@ class AuthService {
             const {status, message: user} = await UserService.findUser(username, false);
             const hashedPassword = user.password
             if(!await comparePassword(password, hashedPassword)){
-                throw new CustomAPIError.UnauthenticatedError("Incorrect Password!");
+                throw new BadRequestError({name: "Authentication Failed!", statusCode: 401, description: "Incorrect password!"});
             }
             const accessToken = createJWT({username: username});
             return {status: 200, message: "Login Succes!", accessToken: accessToken};

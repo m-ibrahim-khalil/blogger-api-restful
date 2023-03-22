@@ -1,6 +1,6 @@
 'use strict';
 const {UsersService, StoriesService} = require('../services');
-const CustomAPIError = require('../errors');
+const {BadRequestError} = require('../errors');
 
 
 const StoryAuthorizationMiddleware = async (req, res, next) => {
@@ -12,7 +12,7 @@ const StoryAuthorizationMiddleware = async (req, res, next) => {
         const userId = user.message.id;
         const authorId = story.message.authorId;
         if(authorId === userId) next();
-        else throw new CustomAPIError.UnauthorizedError("Protected resources! You have not enough privileges to perform an action on this resource!");
+        else throw new BadRequestError({name: "Authorization Failed!", statusCode: 403, description: "UnAuthorized user!"});
     }
     catch(err){
         throw err;
@@ -23,10 +23,10 @@ const UserAuthorizationMiddleware = async (req, res, next) => {
     try{
         const username = req.username;
         if(req.params.username === username) next();
-        else return res.status(403).send("Protected resources! You have not enough privileges to perform an action on this resource!");
+        else throw new BaBadRequestError({name: "Authorization Failed!", statusCode: 403, description: "UnAuthorized user!"});
     }
     catch(err){
-        return res.status(400).send("unhandled error in db!");
+        throw err;
     }
 }
 
