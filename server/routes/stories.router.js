@@ -14,7 +14,7 @@ StoriesRouter.route('/:id')
   .put(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.updateStoryById)
   .delete(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.deleteStoryById);
 
-StoriesRouter.route('/:authorId')
+StoriesRouter.route('/author/:authorId')
   .get(StoriesControler.getStroiesByAuthor);
 
 module.exports = StoriesRouter;
