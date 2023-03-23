@@ -1,8 +1,7 @@
-'use strict';
 const UsersRepository = require('./users.repository');
-const StoriesRepository = require('./stories.repository')
+const StoriesRepository = require('./stories.repository');
 
 module.exports = {
   UsersRepository,
-  StoriesRepository
+  StoriesRepository,
 };

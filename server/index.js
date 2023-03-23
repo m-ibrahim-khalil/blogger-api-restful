@@ -1,5 +1,3 @@
-'use strict';
-
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -8,7 +6,6 @@ const logger = require('./logger');
 const router = require('./routes');
 
 class Server {
-
   constructor() {
     this.server = express();
   }
@@ -28,17 +25,15 @@ class Server {
     this.server.use((req, res, next) => {
       next(createError(404));
     });
-
   }
 
   start() {
-    let hostname = this.server.get('hostname');
-    let port = this.server.get('port');
+    const hostname = this.server.get('hostname');
+    const port = this.server.get('port');
     this.server.listen(port, () => {
-      logger.info('Express server listening on - http://' + hostname + ':' + port);
+      logger.info(`Express server listening on - http://${hostname}:${port}`);
     });
   }
-
 }
 
 module.exports = new Server();
