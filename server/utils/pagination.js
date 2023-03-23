@@ -1,6 +1,6 @@
 const getPagination = (page, size) => {
-  const limit = Math.abs(size ? size : 3);
-  const offset = Math.abs(page ? page * limit : 0);
+  const limit = (size <= 0) ? size : 3;
+  const offset = (page < 0) ? page * limit : 0;
   return { limit, offset };
 };
 
