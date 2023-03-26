@@ -29,8 +29,3 @@ const UserAuthorizationMiddleware = async (req, res, next) => {
         next(err);
     }
 }
-
-module.exports = {
-    StoryAuthorizationMiddleware,
-    UserAuthorizationMiddleware
-};

@@ -1,10 +1,10 @@
-class ViewOnlyStory{
-    constructor(story){
-        this.title = story.title;
-        this.description = story.description;
-        this.updatedAt = story.updatedAt;
-        this.id = story.id;
-        this.authorId = story.authorId
-    }
+class ViewOnlyStory {
+  constructor(story) {
+    this.title = story.title;
+    this.description = story.description;
+    this.updatedAt = story.updatedAt.toString();
+    this.id = story.id;
+    this.authorId = story.authorId;
+  }
 }
-module.exports = {ViewOnlyStory};    
+module.exports = { ViewOnlyStory };

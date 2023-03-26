@@ -1,17 +1,13 @@
-'use strict';
 const User = require('../models/User');
 
 class UsersRepository {
-
-  constructor() {}
-
-  async findAll() {
-    try{
-        const data = await User.findAll();
-        return data;
-      } catch(err){
-        throw err;
-      }
+  async findAll(limit, offset) {
+    try {
+      const data = await User.findAndCountAll({ limit, offset });
+      return data;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async findByUsername(username) {
@@ -36,13 +32,16 @@ class UsersRepository {
       }
   }
 
-  async updateUser(username, password){
-    try{
-      const user = await User.update({ password: password }, {
-        where: {
-          username: username.toLowerCase()
+  async updateUser(username, password) {
+    try {
+      const user = await User.update(
+        { password },
+        {
+          where: {
+            username: username.toLowerCase(),
+          },
         }
-      });
+      );
       return user;
     } catch(err){
       throw err;
@@ -62,12 +61,12 @@ class UsersRepository {
       }
   }
 
-  async findByEmail(email){
-    try{
+  async findByEmail(email) {
+    try {
       const user = await User.findOne({
-        where: { 
-          email: email
-         }
+        where: {
+          email,
+        },
       });
       return user;
     } catch(err){

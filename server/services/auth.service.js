@@ -1,9 +1,7 @@
-"use strict";
-const {createJWT, comparePassword} = require('../utils');
+const { createJWT, comparePassword } = require('../utils');
 const UserService = require('./users.service');
 const {BadRequestError} = require('../errors');
-const {StatusCodes} = require('../utils');
-
+const {StatusCodes} = require('../utils');;
 
 class AuthService {
     constructor() {}

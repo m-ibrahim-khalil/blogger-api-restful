@@ -1,5 +1,5 @@
-'use strict';
 const express = require('express');
+
 const StoriesRouter = express.Router();
 const { StoriesControler } = require('../controllers');
 const {AuthenticationMiddleware, StoryAuthorizationMiddleware} = require('../middlewares');
@@ -10,10 +10,17 @@ StoriesRouter.route('/')
 
 StoriesRouter.route('/:id')
   .get(StoriesControler.getStoryById)
-  .put(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.updateStoryById)
-  .delete(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.deleteStoryById);
+  .put(
+    AuthenticationMiddleware,
+    StoryAuthorizationMiddleware,
+    StoriesControler.updateStoryById
+  )
+  .delete(
+    AuthenticationMiddleware,
+    StoryAuthorizationMiddleware,
+    StoriesControler.deleteStoryById
+  );
 
-StoriesRouter.route('/:authorId')
-  .get(StoriesControler.getStroiesByAuthor);
+StoriesRouter.route('/:authorId').get(StoriesControler.getStroiesByAuthor);
 
 module.exports = StoriesRouter;

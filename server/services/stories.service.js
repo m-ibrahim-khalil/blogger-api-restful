@@ -1,24 +1,23 @@
-"use strict";
 const { StoriesRepository } = require('../ repositories');
-const {ViewOnlyStory, CreateOnlyStory} = require('../dto/story');
+const { ViewOnlyStory, CreateOnlyStory } = require('../dto/story');
 const UsersService = require('./users.service');
 const {HTTP404NotFoundError} = require('../errors');
-
+;
+const { getPagingData } = require('../utils');
 
 class StoriesService {
-  constructor() {}
-
-  async findAllStories() {
-    try{
-      const stories = await StoriesRepository.findAll();
-      return  {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
-    }catch(err){
+  async findAllStories(limit, offset, page) {
+    try {
+      const stories = await StoriesRepository.findAll(limit, offset);
+      const response = getPagingData(stories, page, limit, ViewOnlyStory);
+      return { status: 200, message: response };
+    } catch (err) {
       throw err;
     }
   }
 
   async findStoryById(id) {
-    try{
+    try {
       const story = await StoriesRepository.findById(id);
       if (!story) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 200, message: new ViewOnlyStory(story)};
@@ -27,11 +26,16 @@ class StoriesService {
     }
   }
 
-  async findStoriesByAuthor(authorId) {
-    try{
-      const stories = await StoriesRepository.findByAuthorId(authorId);
-      return {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
-    }catch(err){
+  async findStoriesByAuthor(authorId, limit, offset, page) {
+    try {
+      const stories = await StoriesRepository.findByAuthorId(
+        authorId,
+        limit,
+        offset
+      );
+      const response = getPagingData(stories, page, limit, ViewOnlyStory);
+      return { status: 200, message: response };
+    } catch (err) {
       throw err;
     }
   }
@@ -47,7 +51,7 @@ class StoriesService {
   }
 
   async updateStoryById(id, title, description) {
-    try{
+    try {
       const story = await StoriesRepository.updateStory(id, title, description);
       if (!story[0]) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 200, message: 'Story updated!'};
@@ -57,7 +61,7 @@ class StoriesService {
   }
 
   async deleteStoryById(id) {
-    try{
+    try {
       const story = await StoriesRepository.deleteStory(id);
       if (!story) throw new HTTP404NotFoundError({name: 'Not Found', description:'story does not exists!'});
       return {status: 202, message: 'Story removed!'};

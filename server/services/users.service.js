@@ -1,23 +1,21 @@
-"use strict";
-const {generateHashPassword} = require('../utils');
+const { generateHashPassword, getPagingData } = require('../utils');
 const { UsersRepository } = require('../ repositories');
-const {ViewOnlyUser, CreateOnlyUser} = require('../dto/user');
+const { ViewOnlyUser, CreateOnlyUser } = require('../dto/user');
 const {HTTP404NotFoundError, BadRequestError} = require('../errors');
 
 class UsersService {
-  constructor() {}
-
-  async findAllUsers() {
-    try{
-      const users = await UsersRepository.findAll();
-      return  {status: 200, message: users.map(user => new ViewOnlyUser(user))};
-    }catch(err){
+  async findAllUsers(limit, offset, page) {
+    try {
+      const data = await UsersRepository.findAll(limit, offset);
+      const response = getPagingData(data, page, limit, ViewOnlyUser);
+      return { status: 200, message: response };
+    } catch (err) {
       throw err;
     }
   }
 
-  async findUser(username, dto=true) {
-    try{
+  async findUser(username, dto = true) {
+    try {
       let user = await UsersRepository.findByUsername(username);
       if (!user) throw new HTTP404NotFoundError({name: 'Not Found', description: 'User does not exists!'});
       user = dto ? new ViewOnlyUser(user) : user;
@@ -28,7 +26,7 @@ class UsersService {
   }
 
   async createUser(username, email, password) {
-    try{
+    try {
       const existingUsername = await UsersRepository.findByUsername(username);
       if (existingUsername) throw new BadRequestError({name: "Conflict", description: "Username already exist!"});
       const existingEmail = await UsersRepository.findByEmail(email);
@@ -42,7 +40,7 @@ class UsersService {
   }
 
   async updateUserByUsername(username, password) {
-    try{
+    try {
       const hashedPassword = await generateHashPassword(password);
       const user = await UsersRepository.updateUser(username, hashedPassword);
       if (!user[0]) throw new HTTP404NotFoundError({name: 'Not Found', description: 'User does not exists!'});
@@ -53,7 +51,7 @@ class UsersService {
   }
 
   async deleteUserByUsername(Username) {
-    try{
+    try {
       const user = await UsersRepository.deleteUser(Username);
       if (!user) throw new HTTP404NotFoundError({name: 'Not Found', description: 'User does not exists!'});
       return {status: 202, message: 'User removed!'};
