@@ -23,9 +23,14 @@ const UserAuthorizationMiddleware = async (req, res, next) => {
     try{
         const username = req.username;
         if(req.params.username === username) next();
-        else throw new BaBadRequestError({name: "Authorization Failed!", statusCode: StatusCodes.FORBIDDEN, description: "UnAuthorized user!"});
+        else throw new BadRequestError({name: "Authorization Failed!", statusCode: StatusCodes.FORBIDDEN, description: "UnAuthorized user!"});
     }
     catch(err){
         next(err);
     }
+}
+
+
+module.exports = {
+    StoryAuthorizationMiddleware, UserAuthorizationMiddleware
 }

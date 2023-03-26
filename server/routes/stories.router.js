@@ -21,6 +21,6 @@ StoriesRouter.route('/:id')
     StoriesControler.deleteStoryById
   );
 
-StoriesRouter.route('/:authorId').get(StoriesControler.getStroiesByAuthor);
+StoriesRouter.route('/author/:authorId').get(StoriesControler.getStroiesByAuthor);
 
 module.exports = StoriesRouter;

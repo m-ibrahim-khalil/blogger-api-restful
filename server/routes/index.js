@@ -11,7 +11,7 @@ Router.use('/auth', AuthRouter);
 Router.use('/stories', StoriesRouter);
 
 /* GET home page. */
-Router.all('/', (req, res, next) => {
+Router.all('/', (req, res) => {
   res.send('Welcome to home page!');
 });
 
