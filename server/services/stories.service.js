@@ -45,7 +45,7 @@ class StoriesService {
 
   async createStory(title, description, username) {
     try {
-      const { status, message: user } = await UsersService.findUser(username);
+      const { message: user } = await UsersService.findUser(username);
       const createdStory = await StoriesRepository.create(
         title,
         description,

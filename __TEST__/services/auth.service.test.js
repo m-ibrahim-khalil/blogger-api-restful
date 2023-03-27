@@ -1,75 +1,126 @@
 const { AuthService, UsersService } = require('../../server/services');
-const { comparePassword } = require('../../server/utils');
+const { createJWT, comparePassword } = require('../../server/utils');
+const { BadRequestError } = require('../../server/errors');
+
+jest.mock('../../server/utils');
 
 describe('Testing Auth Service: ', () => {
   describe('Testing registerUser function: ', () => {
-    it('should return a registered user: ', async () => {
-      const username = 'testuser';
-      const email = 'testuser@example.com';
-      const password = 'password';
-      const expectedUser = { username, email, password };
+    it('should register user successfully and return access token: ', async () => {
+      const mockUser = {
+        username: 'testuser',
+        email: 'testuser@example.com',
+        password: 'password',
+      };
+
+      const mockAccessToken = 'mock-access-token';
       jest
         .spyOn(UsersService, 'createUser')
-        .mockResolvedValueOnce({ status: 201, message: expectedUser });
+        .mockResolvedValueOnce({ status: 201, message: mockUser });
+      createJWT.mockReturnValue(mockAccessToken);
 
-      const data = await AuthService.registerUser(username, email, password);
+      const data = await AuthService.registerUser(
+        mockUser.username,
+        mockUser.email,
+        mockUser.password
+      );
 
       expect(UsersService.createUser).toHaveBeenCalledTimes(1);
+      expect(createJWT).toHaveBeenCalledWith({ username: mockUser.username });
       expect(data).toEqual(
         expect.objectContaining({
           status: 201,
-          message: expectedUser,
-          accessToken: expect.any(String),
+          message: mockUser,
+          accessToken: mockAccessToken,
         })
       );
     });
 
-    it('should throw an error if there is an error in the database query', async () => {
-      const username = 'testuser';
-      const email = 'testuser@example.com';
-      const password = 'password';
+    it('should throw an error if UserService.createUser throws an error', async () => {
+      const mockUser = {
+        username: 'testuser',
+        email: 'testuser@example.com',
+        password: 'password',
+      };
       const expectedError = new Error('Database error!');
       jest
         .spyOn(UsersService, 'createUser')
         .mockRejectedValueOnce(expectedError);
 
       await expect(
-        AuthService.registerUser(username, email, password)
+        AuthService.registerUser(
+          mockUser.username,
+          mockUser.email,
+          mockUser.password
+        )
       ).rejects.toThrow(expectedError);
     });
   });
 
   describe('Testing LoginUser function: ', () => {
-    it('should return a accesstoken: ', async () => {
-      const username = 'testuser';
-      const password = 'password';
-      const expectedUser = { username, password };
+    it('should login user successfully and return access token: ', async () => {
+      const mockUser = {
+        username: 'testuser',
+        password: 'password',
+      };
+      const mockAccessToken = 'mock-access-token';
       jest
         .spyOn(UsersService, 'findUser')
-        .mockResolvedValueOnce({ message: expectedUser });
+        .mockResolvedValueOnce({ message: mockUser });
       comparePassword.mockResolvedValueOnce(true);
+      createJWT.mockReturnValue(mockAccessToken);
 
-      const data = await AuthService.loginUser(username, password);
+      const data = await AuthService.loginUser(
+        mockUser.username,
+        mockUser.password
+      );
 
-      expect(UsersService.findAllUsers).toHaveBeenCalledTimes(1);
+      expect(UsersService.findUser).toHaveBeenCalledTimes(1);
+      expect(UsersService.findUser).toHaveBeenCalledWith(
+        mockUser.username,
+        false
+      );
+      expect(comparePassword).toHaveBeenCalledWith(
+        mockUser.password,
+        mockUser.password
+      );
+      expect(createJWT).toHaveBeenCalledWith({ username: mockUser.username });
       expect(data).toEqual(
         expect.objectContaining({
-          status: 201,
-          message: expect.any(String),
-          accessToken: expect.any(String),
+          status: 200,
+          message: 'Login Succes!',
+          accessToken: mockAccessToken,
         })
       );
     });
 
-    it('should throw an error if there is an error in the database query', async () => {
-      const username = 'testuser';
-      const password = 'password';
+    it('should throw an error if UserService.findUser throws an error', async () => {
+      const mockUser = {
+        username: 'testuser',
+        email: 'testuser@example.com',
+        password: 'password',
+      };
       const expectedError = new Error('Database error!');
       jest.spyOn(UsersService, 'findUser').mockRejectedValueOnce(expectedError);
 
-      await expect(AuthService.loginUser(username, password)).rejects.toThrow(
-        expectedError
-      );
+      await expect(
+        AuthService.loginUser(mockUser.username, mockUser.password)
+      ).rejects.toThrow(expectedError);
+    });
+
+    it('should throw an error if password is incorrect', async () => {
+      const mockUser = {
+        username: 'testuser',
+        password: 'wrong_password',
+      };
+      jest
+        .spyOn(UsersService, 'findUser')
+        .mockResolvedValueOnce({ message: mockUser });
+      comparePassword.mockResolvedValue(false);
+
+      await expect(
+        AuthService.loginUser(mockUser.username, mockUser.password)
+      ).rejects.toThrow(BadRequestError);
     });
   });
 });

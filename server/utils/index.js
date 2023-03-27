@@ -3,7 +3,7 @@ const { generateHashPassword, comparePassword } = require('./hashing');
 const validator = require('./validator');
 const ContentNegotiation = require('./contentNegotiation');
 const { getPagination, getPagingData } = require('./pagination');
-const StatusCodes = require('./httpStatusCode')
+const StatusCodes = require('./httpStatusCode');
 
 module.exports = {
   createJWT,
@@ -11,7 +11,7 @@ module.exports = {
   comparePassword,
   ContentNegotiation,
   validator,
-    StatusCodes,
+  StatusCodes,
   getPagination,
   getPagingData,
 };

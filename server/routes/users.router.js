@@ -2,7 +2,7 @@ const express = require('express');
 
 const UsersRouter = express.Router();
 const { UsersController } = require('../controllers');
-const {UserAuthorizationMiddleware} = require('../middlewares')
+const { UserAuthorizationMiddleware } = require('../middlewares');
 
 UsersRouter.route('/').get(UsersController.getAllUsers);
 

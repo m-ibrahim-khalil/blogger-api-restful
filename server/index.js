@@ -1,9 +1,9 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const {InvalidRoutesMiddleware} = require('./middlewares')
+const { InvalidRoutesMiddleware } = require('./middlewares');
 const logger = require('./logger');
 const router = require('./routes');
-const {ErrorHandlerMiddleware} = require('./middlewares');
+const { ErrorHandlerMiddleware } = require('./middlewares');
 
 class Server {
   constructor() {
