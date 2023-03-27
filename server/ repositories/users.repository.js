@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models');
 
 class UsersRepository {
   async findAll(limit, offset) {
@@ -11,25 +11,29 @@ class UsersRepository {
   }
 
   async findByUsername(username) {
-    try{
-        const data = await User.findOne({
-          where: { 
-            username: username.toLowerCase()
-           }
-        });
-        return data;
-      } catch(err){
-        throw err;
-      }
+    try {
+      const data = await User.findOne({
+        where: {
+          username: username.toLowerCase(),
+        },
+      });
+      return data;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async create(username, email, password) {
-    try{
-        const user = await User.create({username: username.toLowerCase(), email: email, password:password});
-        return user;
-      } catch(err){
-        throw err;
-      }
+    try {
+      const user = await User.create({
+        username: username.toLowerCase(),
+        email,
+        password,
+      });
+      return user;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async updateUser(username, password) {
@@ -43,22 +47,22 @@ class UsersRepository {
         }
       );
       return user;
-    } catch(err){
+    } catch (err) {
       throw err;
     }
   }
 
   async deleteUser(username) {
-    try{
-        const user = await User.destroy({
-          where: {
-            username: username.toLowerCase()
-          }
-        });
-        return user;
-      } catch(err){
-        throw err;
-      }
+    try {
+      const user = await User.destroy({
+        where: {
+          username: username.toLowerCase(),
+        },
+      });
+      return user;
+    } catch (err) {
+      throw err;
+    }
   }
 
   async findByEmail(email) {
@@ -69,7 +73,7 @@ class UsersRepository {
         },
       });
       return user;
-    } catch(err){
+    } catch (err) {
       throw err;
     }
   }

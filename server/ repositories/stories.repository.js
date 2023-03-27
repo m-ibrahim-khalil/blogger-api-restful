@@ -68,22 +68,22 @@ class StorysRepository {
         }
       );
       return data;
-    } catch(err){
+    } catch (err) {
       throw err;
     }
   }
 
   async deleteStory(id) {
-    try{
-        const data = await Story.destroy({
-          where: {
-            id: id
-          }
-        });
-        return data;
-      } catch(err){
-        throw err;
-      }
+    try {
+      const data = await Story.destroy({
+        where: {
+          id,
+        },
+      });
+      return data;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
