@@ -1,44 +1,89 @@
-"use strict";
-const UsersService = require('../services/users.service');
+const { UsersService } = require('../services');
+const { BadRequestError } = require('../errors');
+const { ContentNegotiation } = require('../utils');
+const { getPagination } = require('../utils');
 
 class UsersController {
-  constructor() {}
-
-  async getAllUsers(req, res) {
-    const data = await UsersService.findAllUsers();
-    return res.status(data.status).send(data.message);
+  async getAllUsers(req, res, next) {
+    try {
+      const { page, size } = req.query;
+      const { limit, offset } = getPagination(page, size);
+      const { status, message: users } = await UsersService.findAllUsers(
+        limit,
+        offset,
+        page
+      );
+      return new ContentNegotiation(res, status, {
+        message: users,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  async getUserByUsername(req, res) {
-    const username = req.params.username;
-    if(!username){
-      return res.status(400).send({ message: 'Invalid request parameter!' });
+  async getUserByUsername(req, res, next) {
+    try {
+      const { username } = req.params;
+      if (!username)
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing username paramenter!',
+        });
+      const { status, message: user } = await UsersService.findUser(username);
+      return new ContentNegotiation(res, status, {
+        message: user,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
-    const data = await UsersService.findUser(username);
-    return res.status(data.status).send(data.message);
   }
 
-  async deleteUserByUsername(req, res) {
-    const username = req.params.username;
-    if(!username){
-      return res.status(400).send({ message: 'Invalid request parameter!' });
+  async updateUserByUsername(req, res, next) {
+    try {
+      const { username } = req.params;
+      if (!username) {
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing username paramenter!',
+        });
+      }
+      const { Password } = req.body;
+      if (!Password) {
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Password shouldnot be empty!',
+        });
+      }
+      const { status, message: user } = await UsersService.updateUserByUsername(
+        username,
+        Password
+      );
+      return new ContentNegotiation(res, status, {
+        message: user,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
-    const data = await UsersService.removeUser(username);
-    return res.status(data.status).send(data.message);
   }
 
-  async updateUserByUsername(req, res) {
-    const username = req.params.username;
-    if(!username){
-      return res.status(400).send({ message: 'Invalid request parameter!' });
+  async deleteUserByUsername(req, res, next) {
+    try {
+      const { username } = req.params;
+      if (!username) {
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing username paramenter!',
+        });
+      }
+      const { status, message: user } = await UsersService.deleteUserByUsername(
+        username
+      );
+      return new ContentNegotiation(res, status, {
+        message: user,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
-    const { Password }  = req.body;
-    if (!Password) {
-      res.status(400).send({ message: 'Invalid request body' });
-      return;
-    }
-    const data = await UsersService.updateUser(username, Password);
-    return res.status(data.status).send({ message:  data.message});
   }
 }
 

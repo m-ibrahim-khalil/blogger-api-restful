@@ -5,12 +5,11 @@ class UsersRepository {
 
   constructor() {}
 
-  async findAll() {
+  async findAll(limit, offset) {
     try{
-        const data = await User.findAll();
+        const data = await User.findAndCountAll({limit, offset});
         return data;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -24,7 +23,6 @@ class UsersRepository {
         });
         return data;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -34,7 +32,6 @@ class UsersRepository {
         const user = await User.create({username: username.toLowerCase(), email: email, password:password});
         return user;
       } catch(err){
-        console.log(err);
         throw err;
       }
   }
@@ -48,12 +45,11 @@ class UsersRepository {
       });
       return user;
     } catch(err){
-      console.log(err.stack);
       throw err;
     }
   }
 
-  async removeUser(username) {
+  async deleteUser(username) {
     try{
         const user = await User.destroy({
           where: {
@@ -62,7 +58,6 @@ class UsersRepository {
         });
         return user;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -76,11 +71,9 @@ class UsersRepository {
       });
       return user;
     } catch(err){
-      console.log(err.stack);
       throw err;
     }
   }
-
 }
 
 module.exports = new UsersRepository();
