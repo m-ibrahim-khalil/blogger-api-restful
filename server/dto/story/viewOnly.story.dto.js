@@ -4,7 +4,7 @@ class ViewOnlyStory{
         this.description = story.description;
         this.updatedAt = story.updatedAt.toString();
         this.id = story.id;
-        this.authorId = story.authorId
+        this.author = story.author ? story.author.username : "Unknown Author!"
     }
 }
 module.exports = {ViewOnlyStory};    

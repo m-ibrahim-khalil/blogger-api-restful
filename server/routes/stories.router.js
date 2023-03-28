@@ -2,8 +2,7 @@
 const express = require('express');
 const StoriesRouter = express.Router();
 const { StoriesControler } = require('../controllers');
-const AuthenticationMiddleware = require('../middleware/authentication.middleware')
-const {StoryAuthorizationMiddleware} = require('../middleware/authorization.middleware')
+const {AuthenticationMiddleware, StoryAuthorizationMiddleware} = require('../middlewares');
 
 StoriesRouter.route('/')
   .get(StoriesControler.getAllStories)
@@ -14,7 +13,7 @@ StoriesRouter.route('/:id')
   .put(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.updateStoryById)
   .delete(AuthenticationMiddleware, StoryAuthorizationMiddleware, StoriesControler.deleteStoryById);
 
-StoriesRouter.route('/:authorId')
+StoriesRouter.route('/author/:authorId')
   .get(StoriesControler.getStroiesByAuthor);
 
 module.exports = StoriesRouter;

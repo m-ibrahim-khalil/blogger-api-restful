@@ -10,7 +10,6 @@ class StorysRepository {
         const stories = await Story.findAndCountAll({limit, offset, include: 'author'});
         return stories;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -25,7 +24,6 @@ class StorysRepository {
         });
         return story;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -42,7 +40,6 @@ class StorysRepository {
         });
         return stories;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
@@ -52,7 +49,6 @@ class StorysRepository {
         const story = await Story.create({title: title, description: description, authorId: authorId});
         return story;
       } catch(err){
-        console.log(err);
         throw err;
       }
   }
@@ -66,7 +62,6 @@ class StorysRepository {
       });
       return data;
     } catch(err){
-      console.log(err.stack);
       throw err;
     }
   }
@@ -80,7 +75,6 @@ class StorysRepository {
         });
         return data;
       } catch(err){
-        console.log(err.stack);
         throw err;
       }
   }
