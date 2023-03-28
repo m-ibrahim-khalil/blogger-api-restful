@@ -1,13 +1,15 @@
 "use strict";
 const {StoriesService} = require('../services');
-const {ConstentNegotiation} = require('../utils');
+const {ContentNegotiation, getPagination} = require('../utils');
 
 class StoriesControler {
   constructor() {}
 
   async getAllStories(req, res) {
-    const {status, message: stories} = await StoriesService.findAllStories();
-    return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    const {status, message: stories} = await StoriesService.findAllStories(limit, offset, page);
+    return new ContentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
   async getStoryById(req, res) {
@@ -16,16 +18,18 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: story} = await StoriesService.findStoryById(id);
-    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
+    return new ContentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async getStroiesByAuthor(req, res) {
     const authorId = req.params.authorId;
+    const { page, size } = req.query;
     if(!authorId){
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
-    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId);
-    return new ConstentNegotiation(res, status, {message: stories}).sendResponse();
+    const { limit, offset } = getPagination(page, size);
+    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
+    return new ContentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
   async createStory(req, res) {
@@ -35,7 +39,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request body' });
     }
     const {status,message: story} = await StoriesService.createStory(title, description, username);
-    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
+    return new ContentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async updateStoryById(req, res) {
@@ -48,7 +52,7 @@ class StoriesControler {
         return res.status(400).send({ message: 'Invalid request body' });
     }
     const {status, message: story} = await StoriesService.updateStoryById(id, title, description);
-    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
+    return new ContentNegotiation(res, status, {message: story}).sendResponse();
   }
 
   async deleteStoryById(req, res) {
@@ -57,7 +61,7 @@ class StoriesControler {
       return res.status(400).send({ message: 'Invalid request parameter!' });
     }
     const {status, message: story} = await StoriesService.deleteStoryById(id);
-    return new ConstentNegotiation(res, status, {message: story}).sendResponse();
+    return new ContentNegotiation(res, status, {message: story}).sendResponse();
   }
 }
 

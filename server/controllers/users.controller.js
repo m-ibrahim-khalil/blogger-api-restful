@@ -1,12 +1,14 @@
 "use strict";
 const {UsersService} = require('../services');
-const {ContentNegotiation} = require('../utils');
+const {ContentNegotiation, getPagination} = require('../utils');
 
 class UsersController {
   constructor() {}
 
   async getAllUsers(req, res) {
-    const {status, message: users} = await UsersService.findAllUsers();
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    const {status, message: users} = await UsersService.findAllUsers(limit, offset, page);
     return new ContentNegotiation(res, status, {message: users}).sendResponse();
   }
 

@@ -1,15 +1,16 @@
 "use strict";
-const {generateHashPassword} = require('../utils');
+const {generateHashPassword, getPagingData} = require('../utils');
 const { UsersRepository } = require('../ repositories');
 const {ViewOnlyUser, CreateOnlyUser} = require('../dto/user');
 
 class UsersService {
   constructor() {}
 
-  async findAllUsers() {
+  async findAllUsers(limit, offset, page) {
     try{
-      const users = await UsersRepository.findAll();
-      return  {status: 200, message: users.map(user => new ViewOnlyUser(user))};
+      const data = await UsersRepository.findAll(limit, offset);
+      const response = getPagingData(data, page, limit, ViewOnlyUser);
+      return  {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }

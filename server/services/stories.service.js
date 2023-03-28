@@ -1,15 +1,17 @@
 "use strict";
 const { StoriesRepository } = require('../ repositories');
 const {ViewOnlyStory, CreateOnlyStory} = require('../dto/story');
-const UsersService = require('./users.service')
+const UsersService = require('./users.service');
+const {getPagingData} = require('../utils')
 
 class StoriesService {
   constructor() {}
 
-  async findAllStories() {
+  async findAllStories(limit, offset, page) {
     try{
-      const stories = await StoriesRepository.findAll();
-      return  {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
+      const stories = await StoriesRepository.findAll(limit, offset);
+      const response = getPagingData(stories, page, limit,  ViewOnlyStory);
+      return  {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }
@@ -27,13 +29,11 @@ class StoriesService {
     }
   }
 
-  async findStoriesByAuthor(authorId) {
+  async findStoriesByAuthor(authorId, limit, offset, page) {
     try{
-      const stories = await StoriesRepository.findByAuthorId(authorId);
-      if (!stories){
-        return {status: 404, message: 'story does not exists!'};
-      }
-      return {status: 200, message: stories.map(story => new ViewOnlyStory(story))};
+      const stories = await StoriesRepository.findByAuthorId(authorId, limit, offset);
+      const response = getPagingData(stories, page, limit,  ViewOnlyStory);
+      return {status: 200, message: response};
     }catch(err){
       return {status: 500, message: `Unhandled error: ${err.name}`};
     }

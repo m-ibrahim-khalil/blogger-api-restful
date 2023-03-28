@@ -5,9 +5,9 @@ class UsersRepository {
 
   constructor() {}
 
-  async findAll() {
+  async findAll(limit, offset) {
     try{
-        const data = await User.findAll();
+        const data = await User.findAndCountAll({limit, offset});
         return data;
       } catch(err){
         console.log(err.stack);
