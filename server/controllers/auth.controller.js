@@ -1,5 +1,6 @@
 "use strict";
 const {AuthService} = require('../services');
+const {ContentNegotiation} = require('../utils');
 const {BadRequestError} = require('../errors'); 
 
 class AuthController {
@@ -11,7 +12,7 @@ class AuthController {
       if (!Username || !Email || !Password) throw new BadRequestError({name: 'Validation Error!', description: 'Username, Email and Password are required!'});
       const {status,message, accessToken} = await AuthService.registerUser(Username, Email, Password);
       res.cookie('jwt', accessToken, {httpOnly: true});
-      return res.status(status).send(message);
+      return new ContentNegotiation(res, status, {message: message}).sendResponse();
     }catch(err){
       next(err);
     }
@@ -23,7 +24,7 @@ class AuthController {
       if (!Username || !Password) throw new BadRequestError({name: 'Validation Error!', description: 'Username and Password are required!'});
       const {status,message, accessToken} = await AuthService.loginUser(Username, Password);    
       res.cookie('jwt', accessToken, {httpOnly: true});
-      return res.status(status).send(message);
+      return new ContentNegotiation(res, status, {message: message}).sendResponse();
     }catch(err){
       next(err);
     }

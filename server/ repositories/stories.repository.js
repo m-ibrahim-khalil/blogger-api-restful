@@ -5,9 +5,9 @@ class StorysRepository {
 
   constructor() {}
 
-  async findAll() {
+  async findAll(limit, offset) {
     try{
-        const stories = await Story.findAll({include: 'author'});
+        const stories = await Story.findAndCountAll({limit, offset, include: 'author'});
         return stories;
       } catch(err){
         throw err;
@@ -28,13 +28,15 @@ class StorysRepository {
       }
   }
 
-  async findByAuthorId(authorId) {
+  async findByAuthorId(authorId, limit, offset) {
     try{
-        const stories = await Story.findAll({
+        const stories = await Story.findAndCountAll({
           where: { 
             authorId: authorId
            },
-           include: 'author'
+           include: 'author',
+           limit, 
+           offset
         });
         return stories;
       } catch(err){
