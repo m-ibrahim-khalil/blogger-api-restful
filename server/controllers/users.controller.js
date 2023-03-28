@@ -1,7 +1,6 @@
 "use strict";
 const {UsersService} = require('../services');
-const {ContentNegotiation} = require('../utils');
-const {getPagination} = require ('../utils')
+const {ContentNegotiation, getPagination} = require('../utils');
 
 class UsersController {
   constructor() {}
