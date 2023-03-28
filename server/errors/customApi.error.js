@@ -10,4 +10,4 @@ class CustomAPIError extends Error {
     Error.captureStackTrace(this);
   }
 }
-module.exports = CustomAPIError
+module.exports = CustomAPIError;
