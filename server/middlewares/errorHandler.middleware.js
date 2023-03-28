@@ -21,7 +21,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       customError.msg = err.errors[0].message;
       break;
     default:
-
+      break
   }
   logger.error(
     'Error message from the centralized error-handling component',
