@@ -19,8 +19,7 @@ class AuthService {
 
   async loginUser(username, password) {
     try {
-      const { message: user } = await UserService.findUser(username, false);
-      const hashedPassword = user.password;
+      const { password: hashedPassword } = await UserService.findUserPassword(username);
       if (!(await comparePassword(password, hashedPassword))) {
         throw new BadRequestError({
           name: 'Authentication Failed!',

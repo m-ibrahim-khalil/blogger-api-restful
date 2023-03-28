@@ -17,12 +17,21 @@ class UsersService {
     }
   }
 
-  async findUser(username, dto=true) {
+  async findUser(username) {
     try{
       let user = await UsersRepository.findByUsername(username);
       if (!user) throw new HTTP404NotFoundError({name: 'Not Found', description: 'User does not exists!'});
-      user = dto ? new ViewOnlyUser(user) : user;
-      return {status: 200, message: user};
+      return {status: 200, message: new ViewOnlyUser(user)};
+    }catch(err){
+      throw err;
+    }
+  }
+
+  async findUserPassword(username) {
+    try{
+      let user = await UsersRepository.findByUsername(username);
+      if (!user) throw new HTTP404NotFoundError({name: 'Not Found', description: 'User does not exists!'});
+      return {password: user.password};
     }catch(err){
       throw err;
     }
