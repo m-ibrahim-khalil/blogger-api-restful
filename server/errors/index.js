@@ -7,5 +7,5 @@ module.exports = {
   CustomAPIError,
   HTTP404NotFoundError,
   BadRequestError,
-  InternalServerError
+  InternalServerError,
 };

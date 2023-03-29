@@ -1,54 +1,59 @@
-"use strict";
-const {StoriesService} = require('../services');
-const {ContentNegotiation, getPagination} = require('../utils');
-const {BadRequestError} = require('../errors'); 
+const { StoriesService } = require('../services');
+const { ContentNegotiation, getPagination } = require('../utils');
+const { BadRequestError } = require('../errors');
 
 class StoriesControler {
-  constructor() {}
-
   async getAllStories(req, res, next) {
-    try{
+    try {
       const { page, size } = req.query;
       const { limit, offset } = getPagination(page, size);
-      const {status, message: stories} = await StoriesService.findAllStories(limit, offset, page);
-      return new ContentNegotiation(res, status, {message: stories}).sendResponse();
-    }catch(err){
-      next(err);
+      const { status, message: stories } = await StoriesService.findAllStories(
+        limit,
+        offset,
+        page
+      );
+      return new ContentNegotiation(res, status, {
+        message: stories,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
   }
 
   async getStoryById(req, res, next) {
-    try{
-      const id = req.params.id;
-      if(!id) throw new BadRequestError({name: 'Validation Error!', description: 'Missing story id paramenter!'});
-      const {status, message: story} = await StoriesService.findStoryById(id);
-      return new ContentNegotiation(res, status, {message: story}).sendResponse();
-    }catch(err){
-      next(err);
+    try {
+      const { id } = req.params;
+      if (!id)
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing story id parameter!',
+        });
+      const { status, message: story } = await StoriesService.findStoryById(id);
+      return new ContentNegotiation(res, status, {
+        message: story,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
-  }
-
-  async getStroiesByAuthor(req, res) {
-    const authorId = req.params.authorId;
-    const { page, size } = req.query;
-    if(!authorId){
-      return res.status(400).send({ message: 'Invalid request parameter!' });
-    }
-    const { limit, offset } = getPagination(page, size);
-    const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
-    return new ContentNegotiation(res, status, {message: stories}).sendResponse();
   }
 
   async getStroiesByAuthor(req, res, next) {
-    try{
-      const authorId = req.params.authorId;
+    try {
+      const { authorId } = req.params;
       const { page, size } = req.query;
-      if(!authorId) throw new BadRequestError({name: 'Validation Error!', description: 'Missing authorId paramenter!'});
+      if (!authorId)
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing authorId parameter!',
+        });
       const { limit, offset } = getPagination(page, size);
-      const {status, message: stories} = await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
-      return new ContentNegotiation(res, status, {message: stories}).sendResponse();
-    }catch(err){
-      next(err);
+      const { status, message: stories } =
+        await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
+      return new ContentNegotiation(res, status, {
+        message: stories,
+      }).sendResponse();
+    } catch (err) {
+      return next(err);
     }
   }
 
@@ -80,7 +85,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { title, description } = req.body;
       if (!title || !description)
@@ -107,7 +112,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { status, message: story } = await StoriesService.deleteStoryById(
         id
