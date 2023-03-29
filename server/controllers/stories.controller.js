@@ -26,7 +26,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { status, message: story } = await StoriesService.findStoryById(id);
       return new ContentNegotiation(res, status, {
@@ -44,7 +44,7 @@ class StoriesControler {
       if (!authorId)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing authorId paramenter!',
+          description: 'Missing authorId parameter!',
         });
       const { limit, offset } = getPagination(page, size);
       const { status, message: stories } =
@@ -85,7 +85,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { title, description } = req.body;
       if (!title || !description)
@@ -112,7 +112,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { status, message: story } = await StoriesService.deleteStoryById(
         id

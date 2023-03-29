@@ -14,6 +14,7 @@ class TestStory {
 describe('Testing Stories Repository: ', () => {
   describe('Testing findAllStories function: ', () => {
     it('should return a list of stories: ', async () => {
+      // Arrange
       const size = 3;
       const skip = 0;
       jest
@@ -22,16 +23,18 @@ describe('Testing Stories Repository: ', () => {
           storiesDB.slice(offset, offset + limit)
         );
 
-      const data = await StoriesRepository.findAll(size, skip);
+      // Act
+      const response = await StoriesRepository.findAll(size, skip);
 
+      // Assert
       expect(Story.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           limit: size,
           offset: skip,
         })
       );
-      expect(data.length).toBe(size);
-      expect(data).toEqual(
+      expect(response.length).toBe(size);
+      expect(response).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             title: expect.any(String),
@@ -43,10 +46,13 @@ describe('Testing Stories Repository: ', () => {
     });
 
     it('should throw an error if there is an error in the database query', async () => {
+      // Arrange
       const limit = 3;
       const offset = 0;
       const expectedError = new Error('Database error!');
       jest.spyOn(Story, 'findAndCountAll').mockRejectedValueOnce(expectedError);
+
+      // Act & Assert
       await expect(StoriesRepository.findAll(limit, offset)).rejects.toThrow(
         expectedError
       );
@@ -59,14 +65,14 @@ describe('Testing Stories Repository: ', () => {
       const expectedData = { ...storiesDB[0] };
       jest.spyOn(Story, 'findOne').mockResolvedValueOnce(expectedData);
 
-      const data = await StoriesRepository.findById(id);
+      const response = await StoriesRepository.findById(id);
 
       expect(Story.findOne).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id },
         })
       );
-      expect(data).toEqual(expectedData);
+      expect(response).toEqual(expectedData);
     });
 
     it('should throw an error if there is an error in the database query', async () => {
@@ -89,7 +95,11 @@ describe('Testing Stories Repository: ', () => {
         .spyOn(Story, 'findAndCountAll')
         .mockResolvedValueOnce([storiesDB[0]]);
 
-      const data = await StoriesRepository.findByAuthorId(authorId, size, skip);
+      const response = await StoriesRepository.findByAuthorId(
+        authorId,
+        size,
+        skip
+      );
 
       expect(Story.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -100,7 +110,7 @@ describe('Testing Stories Repository: ', () => {
           },
         })
       );
-      expect(data).toEqual(
+      expect(response).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             title: expect.any(String),
@@ -133,14 +143,18 @@ describe('Testing Stories Repository: ', () => {
       jest
         .spyOn(Story, 'create')
         .mockImplementation((story) => new TestStory(story));
-      const res = await StoriesRepository.create(title, description, authorId);
+      const response = await StoriesRepository.create(
+        title,
+        description,
+        authorId
+      );
       expect(Story.create).toHaveBeenCalledTimes(1);
       expect(Story.create).toHaveBeenCalledWith({
         title,
         description,
         authorId,
       });
-      expect(res).toEqual(expect.objectContaining(expectedStory));
+      expect(response).toEqual(expect.objectContaining(expectedStory));
     });
 
     it('should throw an error if there is an error in the database query', async () => {

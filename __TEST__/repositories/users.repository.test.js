@@ -16,6 +16,7 @@ class TestUser {
 describe('Testing Users Repository: ', () => {
   describe('Testing findAllUsers function: ', () => {
     it('should return a list of users', async () => {
+      // Arrange
       const size = 3;
       const skip = 0;
       jest
@@ -24,16 +25,18 @@ describe('Testing Users Repository: ', () => {
           usersDB.slice(offset, offset + limit)
         );
 
-      const data = await UsersRepository.findAll(size, skip);
+      // Act
+      const response = await UsersRepository.findAll(size, skip);
 
+      // Assert
       expect(User.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           limit: size,
           offset: skip,
         })
       );
-      expect(data.length).toBe(size);
-      expect(data).toEqual(
+      expect(response.length).toBe(size);
+      expect(response).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             username: expect.any(String),
@@ -48,10 +51,13 @@ describe('Testing Users Repository: ', () => {
     });
 
     it('should throw an error if there is an error in the database query', async () => {
+      // Arrange
       const limit = 3;
       const offset = 0;
       const expectedError = new Error('Database error!');
       jest.spyOn(User, 'findAndCountAll').mockRejectedValueOnce(expectedError);
+
+      // Act & Assert
       await expect(UsersRepository.findAll(limit, offset)).rejects.toThrow(
         expectedError
       );
@@ -64,12 +70,12 @@ describe('Testing Users Repository: ', () => {
       const expectedData = { ...usersDB[0] };
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(expectedData);
 
-      const data = await UsersRepository.findByUsername(username);
+      const response = await UsersRepository.findByUsername(username);
 
       expect(User.findOne).toHaveBeenCalledWith({
         where: { username: username.toLowerCase() },
       });
-      expect(data).toEqual(expectedData);
+      expect(response).toEqual(expectedData);
     });
 
     it('should throw an error if there is an error in the database query', async () => {
@@ -89,12 +95,12 @@ describe('Testing Users Repository: ', () => {
       const expectedData = { ...usersDB[0] };
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(expectedData);
 
-      const data = await UsersRepository.findByEmail(email);
+      const response = await UsersRepository.findByEmail(email);
 
       expect(User.findOne).toHaveBeenCalledWith({
         where: { email },
       });
-      expect(data).toEqual(expectedData);
+      expect(response).toEqual(expectedData);
     });
 
     it('should throw an error if there is an error in the database query', async () => {
@@ -117,14 +123,14 @@ describe('Testing Users Repository: ', () => {
       jest
         .spyOn(User, 'create')
         .mockImplementation((user) => new TestUser(user));
-      const res = await UsersRepository.create(username, email, password);
+      const response = await UsersRepository.create(username, email, password);
       expect(User.create).toHaveBeenCalledTimes(1);
       expect(User.create).toHaveBeenCalledWith({
         username: username.toLowerCase(),
         email,
         password,
       });
-      expect(res).toEqual(expect.objectContaining(expectedUser));
+      expect(response).toEqual(expect.objectContaining(expectedUser));
     });
 
     it('should throw an error if there is an error in the database query', async () => {

@@ -1,7 +1,6 @@
 const { UsersService } = require('../services');
 const { BadRequestError } = require('../errors');
-const { ContentNegotiation } = require('../utils');
-const { getPagination } = require('../utils');
+const { ContentNegotiation, getPagination } = require('../utils');
 
 class UsersController {
   async getAllUsers(req, res, next) {
@@ -27,7 +26,7 @@ class UsersController {
       if (!username)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       const { status, message: user } = await UsersService.findUser(username);
       return new ContentNegotiation(res, status, {
@@ -44,14 +43,14 @@ class UsersController {
       if (!username) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       }
       const { Password } = req.body;
       if (!Password) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Password shouldnot be empty!',
+          description: 'Password should not be empty!',
         });
       }
       const { status, message: user } = await UsersService.updateUserByUsername(
@@ -72,7 +71,7 @@ class UsersController {
       if (!username) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       }
       const { status, message: user } = await UsersService.deleteUserByUsername(

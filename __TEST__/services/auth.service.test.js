@@ -7,27 +7,29 @@ jest.mock('../../server/utils');
 describe('Testing Auth Service: ', () => {
   describe('Testing registerUser function: ', () => {
     it('should register user successfully and return access token: ', async () => {
+      // Arrange
       const mockUser = {
         username: 'testuser',
         email: 'testuser@example.com',
         password: 'password',
       };
-
       const mockAccessToken = 'mock-access-token';
       jest
         .spyOn(UsersService, 'createUser')
         .mockResolvedValueOnce({ status: 201, message: mockUser });
       createJWT.mockReturnValue(mockAccessToken);
 
-      const data = await AuthService.registerUser(
+      // Act
+      const response = await AuthService.registerUser(
         mockUser.username,
         mockUser.email,
         mockUser.password
       );
 
+      // Assert
       expect(UsersService.createUser).toHaveBeenCalledTimes(1);
       expect(createJWT).toHaveBeenCalledWith({ username: mockUser.username });
-      expect(data).toEqual(
+      expect(response).toEqual(
         expect.objectContaining({
           status: 201,
           message: mockUser,
@@ -37,6 +39,7 @@ describe('Testing Auth Service: ', () => {
     });
 
     it('should throw an error if UserService.createUser throws an error', async () => {
+      // Arrange
       const mockUser = {
         username: 'testuser',
         email: 'testuser@example.com',
@@ -47,6 +50,7 @@ describe('Testing Auth Service: ', () => {
         .spyOn(UsersService, 'createUser')
         .mockRejectedValueOnce(expectedError);
 
+      // Act & Assert
       await expect(
         AuthService.registerUser(
           mockUser.username,
@@ -70,7 +74,7 @@ describe('Testing Auth Service: ', () => {
       comparePassword.mockResolvedValueOnce(true);
       createJWT.mockReturnValue(mockAccessToken);
 
-      const data = await AuthService.loginUser(
+      const response = await AuthService.loginUser(
         mockUser.username,
         mockUser.password
       );
@@ -85,7 +89,7 @@ describe('Testing Auth Service: ', () => {
         mockUser.password
       );
       expect(createJWT).toHaveBeenCalledWith({ username: mockUser.username });
-      expect(data).toEqual(
+      expect(response).toEqual(
         expect.objectContaining({
           status: 200,
           message: 'Login Succes!',
