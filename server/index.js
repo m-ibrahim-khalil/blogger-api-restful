@@ -2,13 +2,12 @@
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const {InvalidRoutesMiddleware} = require('./middlewares')
+const { InvalidRoutesMiddleware } = require('./middlewares');
 const logger = require('./logger');
 const router = require('./routes');
-const {ErrorHandlerMiddleware} = require('./middlewares');
+const { ErrorHandlerMiddleware } = require('./middlewares');
 
 class Server {
-
   constructor() {
     this.server = express();
   }
@@ -28,13 +27,12 @@ class Server {
   }
 
   start() {
-    let hostname = this.server.get('hostname');
-    let port = this.server.get('port');
+    const hostname = this.server.get('hostname');
+    const port = this.server.get('port');
     this.server.listen(port, () => {
-      logger.info('Express server listening on - http://' + hostname + ':' + port);
+      logger.info(`Express server listening on - http://${hostname}:${port}`);
     });
   }
-
 }
 
 module.exports = new Server();

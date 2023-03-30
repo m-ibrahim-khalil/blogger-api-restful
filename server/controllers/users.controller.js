@@ -38,7 +38,7 @@ class UsersController {
     }
   }
 
-  async updateUserByUsername(req, res, next) {
+  async updateByUsername(req, res, next) {
     try {
       const { username } = req.params;
       if (!username) {
@@ -54,7 +54,7 @@ class UsersController {
           description: 'Password shouldnot be empty!',
         });
       }
-      const { status, message: user } = await UsersService.updateUserByUsername(
+      const { status, message: user } = await UsersService.updateByUsername(
         username,
         Password
       );
@@ -66,7 +66,7 @@ class UsersController {
     }
   }
 
-  async deleteUserByUsername(req, res, next) {
+  async deleteByUsername(req, res, next) {
     try {
       const { username } = req.params;
       if (!username) {
@@ -75,7 +75,7 @@ class UsersController {
           description: 'Missing username paramenter!',
         });
       }
-      const { status, message: user } = await UsersService.deleteUserByUsername(
+      const { status, message: user } = await UsersService.deleteByUsername(
         username
       );
       return new ContentNegotiation(res, status, {
