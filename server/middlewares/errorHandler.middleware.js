@@ -9,7 +9,6 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   console.log(err.name);
   switch (err.name) {
     case 'SequelizeValidationError':
-      // customError.msg = "Database Validation Error!";
       customError.statusCode = StatusCodes.BAD_REQUEST;
       break;
     case 'SequelizeDatabaseError':

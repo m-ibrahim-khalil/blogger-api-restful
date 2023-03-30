@@ -21,7 +21,7 @@ User.init({
               msg: 'Please enter your username.'
             },
             isAlphanumeric: {
-                msg: 'Username must contain Alpha Numeric values!'
+                msg: 'username must contain Alpha Numeric values!'
             }
         }
     },
@@ -31,10 +31,10 @@ User.init({
         unique: true,
         validate: {
             notNull: {
-              msg: 'Please enter your Email.'
+              msg: 'Please enter your email.'
             },
             isEmail:{
-                msg: 'Email address is not valid!'
+                msg: 'email address is not valid!'
             }
         }
     },

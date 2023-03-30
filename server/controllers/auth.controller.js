@@ -9,19 +9,19 @@ class AuthController {
 
   async register(req, res, next) {
     try {
-      const { Username, Email, Password } = await req.body;
-      if (!Username || !Email || !Password)
+      const { username, email, password } = await req.body;
+      if (!username || !email || !password)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Username, Email and Password are required!',
+          description: 'username, email and password are required!',
         });
-      const { status, message, accessToken } = await AuthService.registerUser(
-        Username,
-        Email,
-        Password
+      const { message, accessToken } = await AuthService.registerUser(
+        username,
+        email,
+        password
       );
       res.cookie('jwt', accessToken, { httpOnly: true });
-      return new ContentNegotiation(res, status, {
+      return new ContentNegotiation(res, 200, {
         message,
       }).sendResponse();
     } catch (err) {
@@ -31,18 +31,18 @@ class AuthController {
 
   async login(req, res, next) {
     try {
-      const { Username, Password } = await req.body;
-      if (!Username || !Password)
+      const { username, password } = await req.body;
+      if (!username || !password)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Username and Password are required!',
+          description: 'username and password are required!',
         });
-      const { status, message, accessToken } = await AuthService.loginUser(
-        Username,
-        Password
+      const { message, accessToken } = await AuthService.loginUser(
+        username,
+        password
       );
       res.cookie('jwt', accessToken, { httpOnly: true });
-      return new ContentNegotiation(res, status, {
+      return new ContentNegotiation(res, 200, {
         message,
       }).sendResponse();
     } catch (err) {

@@ -4,13 +4,13 @@ const { BadRequestError } = require('../errors');
 
 class AuthService {
   async registerUser(username, email, password) {
-    const { status, message: user } = await UserService.createUser(
+    const { message } = await UserService.createUser(
       username,
       email,
       password
     );
     const accessToken = createJWT({ username });
-    return { status, message: user, accessToken };
+    return { message, accessToken };
   }
 
   async loginUser(username, password) {
@@ -26,7 +26,6 @@ class AuthService {
     }
     const accessToken = createJWT({ username });
     return {
-      status: 200,
       message: 'Login Succes!',
       accessToken,
     };

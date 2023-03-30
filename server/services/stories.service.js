@@ -8,7 +8,7 @@ class StoriesService {
   async findAllStories(limit, offset, page) {
     const stories = await StoriesRepository.findAll(limit, offset);
     const response = getPagingData(stories, page, limit, ViewOnlyStory);
-    return { status: 200, message: response };
+    return { message: response };
   }
 
   async findStoryById(id) {
@@ -18,7 +18,7 @@ class StoriesService {
         name: 'Not Found',
         description: 'story does not exists!',
       });
-    return { status: 200, message: new ViewOnlyStory(story) };
+    return { message: new ViewOnlyStory(story) };
   }
 
   async findStoriesByAuthor(authorId, limit, offset, page) {
@@ -28,7 +28,7 @@ class StoriesService {
       offset
     );
     const response = getPagingData(stories, page, limit, ViewOnlyStory);
-    return { status: 200, message: response };
+    return { message: response };
   }
 
   async createStory(title, description, username) {
@@ -38,7 +38,7 @@ class StoriesService {
       description,
       user.id
     );
-    return { status: 201, message: new CreateOnlyStory(createdStory) };
+    return { message: new CreateOnlyStory(createdStory) };
   }
 
   async updateById(id, title, description) {
@@ -48,7 +48,7 @@ class StoriesService {
         name: 'Not Found',
         description: 'story does not exists!',
       });
-    return { status: 200, message: 'Story updated!' };
+    return { message: 'Story updated!' };
   }
 
   async deleteById(id) {
@@ -58,7 +58,7 @@ class StoriesService {
         name: 'Not Found',
         description: 'story does not exists!',
       });
-    return { status: 202, message: 'Story removed!' };
+    return { message: 'Story removed!' };
   }
 }
 

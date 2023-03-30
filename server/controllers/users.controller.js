@@ -8,13 +8,13 @@ class UsersController {
     try {
       const { page, size } = req.query;
       const { limit, offset } = getPagination(page, size);
-      const { status, message: users } = await UsersService.findAllUsers(
+      const { message } = await UsersService.findAllUsers(
         limit,
         offset,
         page
       );
-      return new ContentNegotiation(res, status, {
-        message: users,
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
@@ -29,9 +29,9 @@ class UsersController {
           name: 'Validation Error!',
           description: 'Missing username paramenter!',
         });
-      const { status, message: user } = await UsersService.findUser(username);
-      return new ContentNegotiation(res, status, {
-        message: user,
+      const { message } = await UsersService.findUser(username);
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
@@ -47,19 +47,19 @@ class UsersController {
           description: 'Missing username paramenter!',
         });
       }
-      const { Password } = req.body;
-      if (!Password) {
+      const { password } = req.body;
+      if (!password) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Password shouldnot be empty!',
+          description: 'password shouldnot be empty!',
         });
       }
-      const { status, message: user } = await UsersService.updateByUsername(
+      const { message} = await UsersService.updateByUsername(
         username,
-        Password
+        password
       );
-      return new ContentNegotiation(res, status, {
-        message: user,
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
@@ -75,11 +75,11 @@ class UsersController {
           description: 'Missing username paramenter!',
         });
       }
-      const { status, message: user } = await UsersService.deleteByUsername(
+      const { message } = await UsersService.deleteByUsername(
         username
       );
-      return new ContentNegotiation(res, status, {
-        message: user,
+      return new ContentNegotiation(res, 202, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);

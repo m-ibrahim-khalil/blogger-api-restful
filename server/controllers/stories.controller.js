@@ -11,13 +11,13 @@ class StoriesControler {
     try {
       const { page, size } = req.query;
       const { limit, offset } = getPagination(page, size);
-      const { status, message: stories } = await StoriesService.findAllStories(
+      const { message } = await StoriesService.findAllStories(
         limit,
         offset,
         page
       );
-      return new ContentNegotiation(res, status, {
-        message: stories,
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       next(err);
@@ -32,9 +32,9 @@ class StoriesControler {
           name: 'Validation Error!',
           description: 'Missing story id paramenter!',
         });
-      const { status, message: story } = await StoriesService.findStoryById(id);
-      return new ContentNegotiation(res, status, {
-        message: story,
+      const { message } = await StoriesService.findStoryById(id);
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       next(err);
@@ -51,10 +51,10 @@ class StoriesControler {
           description: 'Missing authorId paramenter!',
         });
       const { limit, offset } = getPagination(page, size);
-      const { status, message: stories } =
+      const { message } =
         await StoriesService.findStoriesByAuthor(authorId, limit, offset, page);
-      return new ContentNegotiation(res, status, {
-        message: stories,
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       next(err);
@@ -70,13 +70,13 @@ class StoriesControler {
           name: 'Validation Error!',
           description: 'title and description are required!',
         });
-      const { status, message: story } = await StoriesService.createStory(
+      const { message } = await StoriesService.createStory(
         title,
         description,
         username
       );
-      return new ContentNegotiation(res, status, {
-        message: story,
+      return new ContentNegotiation(res, 201, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
@@ -97,13 +97,13 @@ class StoriesControler {
           name: 'Validation Error!',
           description: 'title and description are required!',
         });
-      const { status, message: story } = await StoriesService.updateById(
+      const { message } = await StoriesService.updateById(
         id,
         title,
         description
       );
-      return new ContentNegotiation(res, status, {
-        message: story,
+      return new ContentNegotiation(res, 200, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
@@ -118,9 +118,9 @@ class StoriesControler {
           name: 'Validation Error!',
           description: 'Missing story id paramenter!',
         });
-      const { status, message: story } = await StoriesService.deleteById(id);
-      return new ContentNegotiation(res, status, {
-        message: story,
+      const { message } = await StoriesService.deleteById(id);
+      return new ContentNegotiation(res, 202, {
+        message,
       }).sendResponse();
     } catch (err) {
       return next(err);
