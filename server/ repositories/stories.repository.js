@@ -1,6 +1,6 @@
 'use strict';
 
-const Story = require('../models/Story');
+const {Story} = require('../models');
 
 class StorysRepository {
   constructor() {}
