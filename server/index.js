@@ -21,7 +21,7 @@ class Server {
     this.server.use(express.urlencoded({ extended: false }));
     this.server.use(cookieParser());
 
-    this.server.use('/', router);
+    this.server.use('/api/v1', router);
     this.server.use(InvalidRoutesMiddleware);
     this.server.use(ErrorHandlerMiddleware);
   }

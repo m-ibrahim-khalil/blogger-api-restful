@@ -13,7 +13,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       break;
     case 'SequelizeDatabaseError':
       customError.msg = 'Sequelize Database  Error!';
-      customError.statusCode = StatusCodes.BAD_REQUEST;
+      customError.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
       break;
     case 'SequelizeUniqueConstraintError':
       customError.statusCode = StatusCodes.BAD_REQUEST;
