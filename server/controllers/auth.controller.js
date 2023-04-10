@@ -20,7 +20,11 @@ class AuthController {
         email,
         password
       );
-      res.cookie('jwt', accessToken, { httpOnly: true });
+      res.cookie('jwt', accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+      });
       return new ContentNegotiation(res, 200, {
         message,
       }).sendResponse();
@@ -41,7 +45,11 @@ class AuthController {
         username,
         password
       );
-      res.cookie('jwt', accessToken, { httpOnly: true });
+      res.cookie('jwt', accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+      });
       return new ContentNegotiation(res, 200, {
         message,
       }).sendResponse();

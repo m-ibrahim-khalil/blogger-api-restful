@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { InvalidRoutesMiddleware } = require('./middlewares');
 const logger = require('./logger');
 const router = require('./routes');
@@ -17,6 +18,12 @@ class Server {
     this.server.set('hostname', config.host);
     this.server.set('port', config.port);
 
+    this.server.use(
+      cors({
+        origin: ['http://localhost:3000', 'http://192.168.1.73:3000'],
+        credentials: true,
+      })
+    );
     this.server.use(express.json());
     this.server.use(express.urlencoded({ extended: false }));
     this.server.use(cookieParser());

@@ -6,7 +6,7 @@ User.hasMany(Story, { foreignKey: 'authorId', onDelete: 'CASCADE' });
 Story.belongsTo(User, { as: 'author' });
 
 (async () => {
-  await sequelize.sync({ force: true }); // { force: true }
+  await sequelize.sync(); // { force: true }
 })();
 
 module.exports = {
