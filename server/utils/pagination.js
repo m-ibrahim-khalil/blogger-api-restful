@@ -1,7 +1,7 @@
 const getPagination = (page, size) => {
   page = page ? parseInt(page) : 0;
-  size = size ? parseInt(size) : 5;
-  const limit = size <= 0 ? 5 : size;
+  size = size ? parseInt(size) : 20;
+  const limit = size <= 0 ? 20 : size;
   const offset = page < 0 ?  0 : page * limit;
   return { limit, offset };
 };

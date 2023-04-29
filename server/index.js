@@ -20,7 +20,7 @@ class Server {
 
     this.server.use(
       cors({
-        origin: ['http://localhost:3000', 'http://192.168.1.73:3000'],
+        origin: ['http://localhost:5173', 'http://192.168.1.73:5173'],
         credentials: true,
       })
     );
