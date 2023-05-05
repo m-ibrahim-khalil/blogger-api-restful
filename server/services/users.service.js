@@ -1,6 +1,6 @@
 'use strict';
 
-const { generateHashPassword, getPagingData } = require('../utils');
+const { generateHashPassword, getPagingData, comparePassword, StatusCodes } = require('../utils');
 const { UsersRepository } = require('../ repositories');
 const { ViewOnlyUser, CreateOnlyUser } = require('../dto/user');
 const { HTTP404NotFoundError, BadRequestError } = require('../errors');
@@ -56,18 +56,29 @@ class UsersService {
     return { message: new CreateOnlyUser(createdUser) };
   }
 
-  async updateByUsername(username, password) {
-    const hashedPassword = await generateHashPassword(password);
+  async updateByUsername(username, oldPassword, newPassword) {
+    const {password: userPassword} = await this.findUserPassword(username);
+    console.log(oldPassword, userPassword)
+
+    if (!(await comparePassword(oldPassword, userPassword))) {
+      throw new BadRequestError({
+        name: 'Authentication Failed!',
+        statusCode: StatusCodes.UNAUTHORIZED,
+        description: 'Incorrect old password! You need to provide correct old password to update new password.',
+      });
+    }
+
+    const hashedNewPassword = await generateHashPassword(newPassword);
     const user = await UsersRepository.updateByUsername(
       username,
-      hashedPassword
+      hashedNewPassword
     );
     if (!user[0])
       throw new HTTP404NotFoundError({
-        name: 'Not Found',
-        description: 'User does not exists!',
+        name: 'Database error',
+        description: 'Update password failed!',
       });
-    return { message: 'User updated!' };
+    return { message: 'Password updated!' };
   }
 
   async deleteByUsername(username) {

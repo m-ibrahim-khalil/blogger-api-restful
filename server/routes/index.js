@@ -6,9 +6,8 @@ const Router = express.Router();
 const UsersRouter = require('./users.router');
 const AuthRouter = require('./auth.router');
 const StoriesRouter = require('./stories.router');
-const { AuthenticationMiddleware } = require('../middlewares');
 
-Router.use('/users', AuthenticationMiddleware, UsersRouter);
+Router.use('/users', UsersRouter);
 Router.use('/auth', AuthRouter);
 Router.use('/stories', StoriesRouter);
 

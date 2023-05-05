@@ -47,8 +47,8 @@ class UsersController {
           description: 'Missing username paramenter!',
         });
       }
-      const { password } = req.body;
-      if (!password) {
+      const { oldPassword, newPassword } = req.body;
+      if (!oldPassword || !newPassword) {
         throw new BadRequestError({
           name: 'Validation Error!',
           description: 'password shouldnot be empty!',
@@ -56,7 +56,7 @@ class UsersController {
       }
       const { message} = await UsersService.updateByUsername(
         username,
-        password
+        oldPassword, newPassword
       );
       return new ContentNegotiation(res, 200, {
         message,

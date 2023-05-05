@@ -9,6 +9,7 @@ class StorysRepository {
     const stories = await Story.findAndCountAll({
       limit,
       offset,
+      order: [['updatedAt', 'DESC']],
       include: 'author',
     });
     return stories;
@@ -29,6 +30,7 @@ class StorysRepository {
       where: {
         authorId,
       },
+      order: [['updatedAt', 'DESC']],
       include: 'author',
       limit,
       offset,
