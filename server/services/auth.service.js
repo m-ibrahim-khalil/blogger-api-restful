@@ -9,6 +9,7 @@ class AuthService {
       email,
       password
     );
+    username = username.toLowerCase();
     const accessToken = createJWT({ username });
     return { message, accessToken };
   }
@@ -24,6 +25,7 @@ class AuthService {
         description: 'Incorrect password!',
       });
     }
+    username = username.toLowerCase();
     const accessToken = createJWT({ username });
     return {
       message: 'Login Succes!',
