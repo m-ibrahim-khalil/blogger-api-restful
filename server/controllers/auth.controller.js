@@ -23,7 +23,7 @@ class AuthController {
       res.cookie('jwt', accessToken, {
         // httpOnly: true,
         secure: true,
-        sameSite: 'None',
+        sameSite: 'none',
       });
       return new ContentNegotiation(res, 200, {
         message,
@@ -46,9 +46,9 @@ class AuthController {
         password
       );
       res.cookie('jwt', accessToken, {
-        // httpOnly: true,
+        domain: ['localhost'],
         secure: true,
-        sameSite: 'None',
+        sameSite: 'none'
       });
       return new ContentNegotiation(res, 200, {
         message,
