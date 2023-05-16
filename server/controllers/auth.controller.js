@@ -21,7 +21,6 @@ class AuthController {
         password
       );
       res.cookie('jwt', accessToken, {
-        // httpOnly: true,
         secure: true,
         sameSite: 'none',
       });
@@ -46,7 +45,6 @@ class AuthController {
         password
       );
       res.cookie('jwt', accessToken, {
-        domain: ['localhost'],
         secure: true,
         sameSite: 'none'
       });
