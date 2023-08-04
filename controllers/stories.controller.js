@@ -10,11 +10,11 @@ class StoriesControler {
   async getAllStories(req, res, next) {
     try {
       const { page, size } = req.query;
-      const { limit, offset } = getPagination(page, size);
+      const { limit, offset } = getPagination(page || 0, size || 10);
       const { message } = await StoriesService.findAllStories(
         limit,
         offset,
-        page
+        page || 0
       );
       return new ContentNegotiation(res, 200, {
         message,

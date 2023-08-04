@@ -17,12 +17,6 @@ class Server {
     this.server.set('env', config.env);
     this.server.set('hostname', config.host);
     this.server.set('port', config.port);
-  //   this.server.use(function(req, res, next) {
-  //     res.header('Access-Control-Allow-Origin', '*');
-  //     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  //     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  //     next();
-  // });
     this.server.use(
       cors({
         origin: ['http://localhost:5173', 'http://192.168.1.73:5173', 'http://0.0.0.0:5173', 'http://127.0.0.1:5173'],
