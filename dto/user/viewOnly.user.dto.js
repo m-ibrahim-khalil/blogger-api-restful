@@ -5,6 +5,11 @@ class ViewOnlyUser {
     this.createdAt = user.createdAt.toString();
     this.updatedAt = user.updatedAt.toString();
     this.id = user.id;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.bio = user.bio;
+    this.gender = this.gender;
+    this.birthDate = user?.birthDate?.toString();
   }
 }
 module.exports = { ViewOnlyUser };

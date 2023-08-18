@@ -38,7 +38,7 @@ class UsersController {
     }
   }
 
-  async updateByUsername(req, res, next) {
+  async updatePasswordByUsername(req, res, next) {
     try {
       const { username } = req.params;
       if (!username) {
@@ -54,7 +54,7 @@ class UsersController {
           description: 'password shouldnot be empty!',
         });
       }
-      const { message} = await UsersService.updateByUsername(
+      const { message} = await UsersService.updatePasswordByUsername(
         username,
         oldPassword, newPassword
       );
@@ -62,6 +62,34 @@ class UsersController {
         message,
       }).sendResponse();
     } catch (err) {
+      return next(err);
+    }
+  }
+
+  async updateUserInfoByUsername(req, res, next) {
+    try {
+      const { username } = req.params;
+      if (!username) {
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Missing username paramenter!',
+        });
+      }
+      const userInfo = req.body;
+      if (!userInfo) {
+        throw new BadRequestError({
+          name: 'Validation Error!',
+          description: 'Nothing to update!',
+        });
+      }
+      const { message } = await UsersService.updateUserInfoByUsername(
+        username,
+        userInfo
+      );
+      return new ContentNegotiation(res, 200, {
+        message,
+      }).sendResponse();
+    }catch (err) {
       return next(err);
     }
   }

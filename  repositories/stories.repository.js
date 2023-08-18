@@ -38,18 +38,19 @@ class StorysRepository {
     return stories;
   }
 
-  async create(title, description, authorId) {
+  async create(title, description, coverImageURL, authorId) {
     const story = await Story.create({
       title,
       description,
+      coverImageURL,
       authorId,
     });
     return story;
   }
 
-  async updateById(id, title, description) {
+  async updateById(id, title, description, coverImageURL) {
     const data = await Story.update(
-      { title, description },
+      { title, description, coverImageURL },
       {
         where: {
           id,

@@ -1,7 +1,7 @@
 const server = require('./server');
-const {development} = require('./config/configuration');
+const {environment} = require('./configs/environment.config');
 
-server.setup(development);
+server.setup(environment);
 server.start();
 
 module.exports = server;

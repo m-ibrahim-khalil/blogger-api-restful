@@ -7,6 +7,7 @@ const {
 } = require('./authorization.middleware');
 const InvalidRoutesMiddleware = require('./invalidRoutes.middleware');
 const ErrorHandlerMiddleware = require('./errorHandler.middleware');
+const {uploadImage, upload} = require('./fileUpload.middleware');
 
 module.exports = {
   AuthenticationMiddleware,
@@ -14,4 +15,6 @@ module.exports = {
   UserAuthorizationMiddleware,
   ErrorHandlerMiddleware,
   InvalidRoutesMiddleware,
+  uploadImage,
+  upload
 };

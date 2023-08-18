@@ -1,6 +1,6 @@
 'use strict'
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../connectDb');
+const {sequelize} = require('../configs/db.config');
 const User = require('./User')
 
 class Story extends Model {}
@@ -20,7 +20,10 @@ Story.init({
     description: {
         type: DataTypes.TEXT,
         allowNull: false,
-    }
+    },
+    coverImageURL: {
+        type: DataTypes.TEXT,
+      },
 }, {sequelize});
 
 module.exports = Story;

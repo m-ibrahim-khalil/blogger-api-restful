@@ -56,7 +56,7 @@ class UsersService {
     return { message: new CreateOnlyUser(createdUser) };
   }
 
-  async updateByUsername(username, oldPassword, newPassword) {
+  async updatePasswordByUsername(username, oldPassword, newPassword) {
     const {password: userPassword} = await this.findUserPassword(username);
     console.log(oldPassword, userPassword)
 
@@ -69,7 +69,7 @@ class UsersService {
     }
 
     const hashedNewPassword = await generateHashPassword(newPassword);
-    const user = await UsersRepository.updateByUsername(
+    const user = await UsersRepository.updatePasswordByUsername(
       username,
       hashedNewPassword
     );
@@ -80,6 +80,35 @@ class UsersService {
       });
     return { message: 'Password updated!' };
   }
+
+  async updateUserInfoByUsername(username, userInfo) {
+    const existingUsername = await UsersRepository.findByUsername(username);
+    if (!existingUsername) {
+      throw new HTTP404NotFoundError({
+        name: 'Not Found',
+        description: 'User does not exists!',
+      });
+    }
+    if(userInfo?.email) {
+      const emailInUsed = await UsersRepository.findByEmail(userInfo.email);
+      if (emailInUsed && emailInUsed.username !== username) {
+        throw new BadRequestError({
+          name: 'Conflict',
+          description: 'email already exist!',
+        });
+      }
+    }
+    const user = await UsersRepository.updateUserInfoByUsername(
+      username,
+      userInfo
+    );
+    if (!user[0])
+      throw new HTTP404NotFoundError({
+        name: 'Database error',
+        description: 'Update user info failed!',
+      });
+    return { message: 'User info updated!' }; 
+}
 
   async deleteByUsername(username) {
     const user = await UsersRepository.deleteByUsername(username);
