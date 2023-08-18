@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "jest --watchAll --verbose",
+    "format": "prettier --write"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

@@ -27,7 +27,7 @@ class UsersController {
       if (!username)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       const { message } = await UsersService.findUser(username);
       return new ContentNegotiation(res, 200, {
@@ -44,14 +44,14 @@ class UsersController {
       if (!username) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       }
       const { oldPassword, newPassword } = req.body;
       if (!oldPassword || !newPassword) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'password shouldnot be empty!',
+          description: 'Password should not be empty!',
         });
       }
       const { message} = await UsersService.updatePasswordByUsername(
@@ -72,7 +72,7 @@ class UsersController {
       if (!username) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       }
       const userInfo = req.body;
@@ -100,7 +100,7 @@ class UsersController {
       if (!username) {
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing username paramenter!',
+          description: 'Missing username parameter!',
         });
       }
       const { message } = await UsersService.deleteByUsername(

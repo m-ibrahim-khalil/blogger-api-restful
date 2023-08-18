@@ -8,7 +8,7 @@ class ViewOnlyUser {
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.bio = user.bio;
-    this.gender = this.gender;
+    this.gender = user.gender;
     this.birthDate = user?.birthDate?.toString();
   }
 }
