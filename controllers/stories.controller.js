@@ -30,7 +30,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { message } = await StoriesService.findStoryById(id);
       return new ContentNegotiation(res, 200, {
@@ -48,7 +48,7 @@ class StoriesControler {
       if (!authorId)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing authorId paramenter!',
+          description: 'Missing authorId parameter!',
         });
       const { limit, offset } = getPagination(page, size);
       const { message } =
@@ -64,7 +64,9 @@ class StoriesControler {
   async createStory(req, res, next) {
     try {
       const { title, description } = await req.body;
+      const coverImageURL = req.file?.secure_url ?? null;
       const { username } = req;
+
       if (!title || !description)
         throw new BadRequestError({
           name: 'Validation Error!',
@@ -73,6 +75,7 @@ class StoriesControler {
       const { message } = await StoriesService.createStory(
         title,
         description,
+        coverImageURL,
         username
       );
       return new ContentNegotiation(res, 201, {
@@ -86,12 +89,13 @@ class StoriesControler {
   async updateById(req, res, next) {
     try {
       const { id } = req.params;
+      const { title, description } = req.body;
+      const coverImageURL = req.file?.secure_url ?? req.body?.coverImageURL;
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
-      const { title, description } = req.body;
       if (!title || !description)
         throw new BadRequestError({
           name: 'Validation Error!',
@@ -100,7 +104,8 @@ class StoriesControler {
       const { message } = await StoriesService.updateById(
         id,
         title,
-        description
+        description,
+        coverImageURL
       );
       return new ContentNegotiation(res, 200, {
         message,
@@ -116,7 +121,7 @@ class StoriesControler {
       if (!id)
         throw new BadRequestError({
           name: 'Validation Error!',
-          description: 'Missing story id paramenter!',
+          description: 'Missing story id parameter!',
         });
       const { message } = await StoriesService.deleteById(id);
       return new ContentNegotiation(res, 202, {

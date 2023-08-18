@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken');
 const { BadRequestError } = require('../errors');
 const { StatusCodes } = require('../utils');
+const { environment } = require('../configs/environment.config');
 
 const authenticationMiddleware = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ const authenticationMiddleware = async (req, res, next) => {
       });
     const { username } = jwt.verify(
       accessToken,
-      process.env.ACCESS_TOKEN_SECRET
+      environment.JWT_ACCESS_TOKEN_SECRET
     );
     req.username = username;
     next();

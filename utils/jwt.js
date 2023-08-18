@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const { environment } = require('../configs/environment.config');
 
 const createJWT = (payload) =>
-  jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+  jwt.sign(payload, environment.JWT_ACCESS_TOKEN_SECRET, {
     algorithm: 'HS256',
-    expiresIn: process.env.ACCESS_TOKEN_LIFE,
+    expiresIn: environment.JWT_ACCESS_TOKEN_LIFE,
   });
 
 module.exports = {

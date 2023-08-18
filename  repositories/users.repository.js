@@ -28,7 +28,19 @@ class UsersRepository {
     return user;
   }
 
-  async updateByUsername(username, password) {
+  async updateUserInfoByUsername(username, userInfo) {
+    const user = await User.update(
+      userInfo,
+      {
+        where: {
+          username: username.toLowerCase(),
+        },
+      }
+    );
+    return user;
+  }
+
+  async updatePasswordByUsername(username, password) {
     const user = await User.update(
       { password },
       {
