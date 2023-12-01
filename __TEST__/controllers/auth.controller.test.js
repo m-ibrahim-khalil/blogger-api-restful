@@ -58,6 +58,7 @@ describe('Testing AuthController', () => {
         expectedResponse.accessToken,
         {
           httpOnly: true,
+          sameSite: 'None',
         }
       );
       expect(response).toBe(expectedResponse);
@@ -130,6 +131,8 @@ describe('Testing AuthController', () => {
         expectedResponse.accessToken,
         {
           httpOnly: true,
+          secure: true,
+          sameSite: 'None',
         }
       );
       expect(response).toBe(expectedResponse);
